@@ -128,13 +128,17 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="KeyCtl.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MapCtl.cpp" />
     <ClCompile Include="SceneMng.cpp" />
+    <ClCompile Include="VECTOR2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="KeyCtl.h" />
+    <ClInclude Include="MapCtl.h" />
     <ClInclude Include="SceneMng.h" />
+    <ClInclude Include="VECTOR2.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

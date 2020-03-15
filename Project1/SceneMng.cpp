@@ -26,7 +26,7 @@ SceneMng::~SceneMng()
 bool SceneMng::SysInit()
 {
 	// 画面モードの設定
-	SetGraphMode(640, 480, 16);
+	SetGraphMode(800, 800, 16);
 	ChangeWindowMode(TRUE);			// ウインドウモードに.
 
 	// ＤＸライブラリ初期化処理
