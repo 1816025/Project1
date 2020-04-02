@@ -2,9 +2,7 @@
 #include "BaseScene.h"
 #include "KeyCtl.h"
 
-#define DisplaySizeX 600
-#define DisplaySizeY 600
-#define ChipSize 10
+#define lpGame Game::GetInstance()
 
 struct Date
 {
@@ -19,15 +17,22 @@ class Game:
 	public BaseScene
 {
 public:
+	static Game &GetInstance(void)
+	{
+		static Game s_Instance;
+		return s_Instance;
+	}
+	unique_base UpDate(unique_base own,const KeyCtl &controller);
+	const Date Getdate();
+private:
 	Game();
 	~Game();
-	unique_base UpDate(unique_base own,const KeyCtl &controller);
-private:
 	int Init();
 	void Timer(const KeyCtl &controller);	//¹Þ°Ñ“àŽžŠÔ‚ÆÌÚ°Ñ‚ÌŒv‘ª
 	void Draw();
 	bool TimeTransFlag;
 	int Frame;
+	int seed;
 	Date date;
 	bool Debug;
 };

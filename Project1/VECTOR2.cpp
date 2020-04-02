@@ -30,6 +30,22 @@ int & VECTOR2::operator[](int i)
 	}
 }
 
+VECTOR2 operator+(const VECTOR2 & r, const VECTOR2 & l)
+{
+	VECTOR2 vec;
+	vec.x = r.x + l.x;
+	vec.y = r.y + l.y;
+	return vec;
+}
+
+VECTOR2 operator-(const VECTOR2 & r, const VECTOR2 & l)
+{
+	VECTOR2 vec;
+	vec.x = r.x - l.x;
+	vec.y = r.y - l.y;
+	return vec;
+}
+
 VECTOR2 operator/(const VECTOR2 & r, const VECTOR2 & l)
 {
 	VECTOR2 vec;

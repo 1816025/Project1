@@ -1,7 +1,9 @@
+#include <time.h>
 #include "DxLib.h"
 #include "KeyCtl.h"
 #include "BaseScene.h"
 #include "MapCtl.h"
+#include "IslandGenerator.h"
 #include "Game.h"
 
 Game::Game()
@@ -15,11 +17,12 @@ Game::~Game()
 
 int Game::Init()
 {
-	lpMapCtl.SetUp(VECTOR2(DisplaySizeX, DisplaySizeY), VECTOR2(ChipSize, ChipSize), VECTOR2(100, 50));
+	lpIslandGenerator.IslandInit();
 	date = { 1,1,1,0,0 };
 	Frame = 0;
 	TimeTransFlag = true; //trueでFrame加算
 	Debug = false;
+	srand(time(NULL));
 	return 0;
 }
 
@@ -81,23 +84,12 @@ void Game::Timer(const KeyCtl &controller)
 		}
 	}
 
-	if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
-	{
-		for (int y = 0; y < DisplaySizeY / ChipSize; y++)
-		{
-			for (int x = 0; x < DisplaySizeX / ChipSize; x++)
-			{
-				if((x%60) > 15 && (y%60)>15 && (x % 60) < 45 && (y % 60) <45 )
-				lpMapCtl.SetMapData(VECTOR2(ChipSize * x, ChipSize * y), Map_ID::sand);
-			}
-
-		}
-	}
-
 }
 
 void Game::Draw()
 {
+	auto Mpos = VECTOR2(0, 0);
+	GetMousePoint(&Mpos.x,&Mpos.y);
 	// 画面を初期化(真っ黒にする)
 	ClearDrawScreen();
 	if (Debug)
@@ -116,13 +108,38 @@ void Game::Draw()
 		DrawLine(100+(ChipSize*x), 50,100+ (ChipSize*x), 50+(ChipSize*(DisplaySizeX / ChipSize)),  0x666666);
 	}
 
+	DrawFormatString(0, 680, 0xffffff, "Mpos.x%d Mpos.y%d",Mpos.x,Mpos.y);
+	DrawFormatString(0, 700, 0xffffff, "type: %d",lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x -100,Mpos.y-50)).color);
+	DrawFormatString(0, 720, 0xffffff, "color: %x", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 50)).color);
+	DrawFormatString(0, 740, 0xffffff, "Lv: %d", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 60)).Lv);
+	DrawFormatString(0, 760, 0xffffff, "ProductionSpeed: %d", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 50)).ProductionSpeed);
+	DrawFormatString(0, 780, 0xffffff, "Nature: %d", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 50)).Nature);
+
 	// 裏画面の内容を表画面にコピーする（描画の確定）.
 	ScreenFlip();
 }
 
 unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 {
+	auto Key = controller.GetCtl(NOW);
+	auto KeyOld = controller.GetCtl(OLD);
+
 	Timer(controller);
 	Draw();
+
+	if (Key[KEY_INPUT_D] & ~KeyOld[KEY_INPUT_D])
+	{
+		lpIslandGenerator.IslandInit();
+	}
+
+	if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
+	{
+		lpIslandGenerator.IslandMaker();
+	}
 	return move(own);
+}
+
+const Date Game::Getdate()
+{
+	return date;
 }

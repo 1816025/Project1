@@ -126,6 +126,7 @@
   <ItemGroup>
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="IslandGenerator.cpp" />
     <ClCompile Include="KeyCtl.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapCtl.cpp" />
@@ -135,6 +136,7 @@
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="IslandGenerator.h" />
     <ClInclude Include="KeyCtl.h" />
     <ClInclude Include="MapCtl.h" />
     <ClInclude Include="SceneMng.h" />

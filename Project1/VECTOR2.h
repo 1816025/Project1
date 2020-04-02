@@ -12,4 +12,6 @@ public:
 
 };
 
+	VECTOR2 operator+(const VECTOR2& r, const VECTOR2& l);
+	VECTOR2 operator-(const VECTOR2& r, const VECTOR2& l);
 	VECTOR2 operator/(const VECTOR2& r, const VECTOR2& l);
