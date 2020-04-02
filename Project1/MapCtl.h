@@ -1,6 +1,7 @@
 #pragma once
 #include <array>
 #include <vector>
+#include "Game.h"
 #include "DxLib.h"
 #include "vector2.h"
 
@@ -39,6 +40,8 @@ struct Status
 
 using namespace std;
 
+class Game;
+
 struct CheackSize
 {
 	bool operator()(const VECTOR2& selPos, const VECTOR2& mapSize)
@@ -61,8 +64,8 @@ public:
 		return s_Instance;
 	}
 
-	bool MapSave(string worldname);
-	bool MapLoad(void);
+	bool MapSave(bool first,string worldname = "New World");
+	bool MapLoad(string worldname);
 
 	bool SetUp(const VECTOR2& size, const VECTOR2& chipSize, const VECTOR2& offSet);
 	bool SetMapData(const VECTOR2& pos,Map_ID id);
@@ -70,6 +73,7 @@ public:
 	Status GetPanelStatus(const VECTOR2& pos);
 	void Draw(void);
 	void SetPos(VECTOR2 pos);
+	void SetDate(Date date);
 private:
 	MapCtl();
 	~MapCtl();
@@ -81,5 +85,6 @@ private:
 	VECTOR2 chipsize;
 	VECTOR2 drawOffset;
 	VECTOR2 pos;
+	Date date;
 };
 

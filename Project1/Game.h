@@ -2,8 +2,6 @@
 #include "BaseScene.h"
 #include "KeyCtl.h"
 
-#define lpGame Game::GetInstance()
-
 struct Date
 {
 	int year;
@@ -13,20 +11,16 @@ struct Date
 	int minute;
 };
 
+using namespace std;
+
 class Game:
 	public BaseScene
 {
 public:
-	static Game &GetInstance(void)
-	{
-		static Game s_Instance;
-		return s_Instance;
-	}
-	unique_base UpDate(unique_base own,const KeyCtl &controller);
-	const Date Getdate();
-private:
 	Game();
 	~Game();
+	unique_base UpDate(unique_base own,const KeyCtl &controller);
+private:
 	int Init();
 	void Timer(const KeyCtl &controller);	//¹Þ°Ñ“àŽžŠÔ‚ÆÌÚ°Ñ‚ÌŒv‘ª
 	void Draw();
@@ -35,5 +29,6 @@ private:
 	int seed;
 	Date date;
 	bool Debug;
+	string WorldName;
 };
 

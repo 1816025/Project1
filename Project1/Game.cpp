@@ -23,6 +23,7 @@ int Game::Init()
 	TimeTransFlag = true; //true‚ÅFrame‰ÁŽZ
 	Debug = false;
 	srand(time(NULL));
+	WorldName = "New World1";
 	return 0;
 }
 
@@ -125,6 +126,7 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	auto KeyOld = controller.GetCtl(OLD);
 
 	Timer(controller);
+	lpMapCtl.SetDate(date);
 	Draw();
 
 	if (Key[KEY_INPUT_D] & ~KeyOld[KEY_INPUT_D])
@@ -135,11 +137,11 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
 	{
 		lpIslandGenerator.IslandMaker();
+		lpMapCtl.MapSave(true);
+	}if (Key[KEY_INPUT_L] & ~KeyOld[KEY_INPUT_L])
+	{
+		lpMapCtl.MapLoad(WorldName);
 	}
 	return move(own);
 }
 
-const Date Game::Getdate()
-{
-	return date;
-}
