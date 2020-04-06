@@ -2,6 +2,7 @@
 #include <DxLib.h>
 #include <memory>
 
+#define ScreenSize VECTOR2(800,800)
 #define DisplaySizeX 600
 #define DisplaySizeY 600
 #define ChipSize 10

@@ -1,5 +1,6 @@
 #pragma once
 #include "BaseScene.h"
+#include "MAP_ID.h"
 #include "KeyCtl.h"
 
 struct Date
@@ -12,7 +13,6 @@ struct Date
 };
 
 using namespace std;
-
 class Game:
 	public BaseScene
 {
@@ -30,5 +30,6 @@ private:
 	Date date;
 	bool Debug;
 	string WorldName;
+	Map_ID id;
 };
 

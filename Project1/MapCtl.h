@@ -2,38 +2,14 @@
 #include <array>
 #include <vector>
 #include "Game.h"
+#include "MAP_ID.h"
 #include "DxLib.h"
 #include "vector2.h"
 
-enum class Map_ID
-{
-	water,
-	water2,
-	plain,
-	rock,
-	sand,
-	forest,
-	NON,
-	MAX
-};
-enum class Biome
-{
-	Ocean,
-	Plain,
-	Forest,
-	Desert,
-	Mountain,
-	MAX
-};
-
 struct Status
 {
-	int color;
-	int Lv;
-	int Height;
-	int ProductionSpeed;
-	Biome biome;
-	bool Nature;
+	bool BuildFlag;
+	bool WaterFlag;
 };
 
 #define lpMapCtl MapCtl::GetInstance()
@@ -71,6 +47,8 @@ public:
 	bool SetMapData(const VECTOR2& pos,Map_ID id);
 	Map_ID GetMapData(const VECTOR2& pos);
 	Status GetPanelStatus(const VECTOR2& pos);
+	int GetPanelConter(const Map_ID id);
+	string GetWorldName();
 	void Draw(void);
 	void SetPos(VECTOR2 pos);
 	void SetDate(Date date);
@@ -86,5 +64,7 @@ private:
 	VECTOR2 drawOffset;
 	VECTOR2 pos;
 	Date date;
+
+	string WorldName;
 };
 

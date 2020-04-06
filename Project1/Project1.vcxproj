@@ -125,22 +125,34 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseScene.cpp" />
+    <ClCompile Include="Factory.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="ImageMng.cpp" />
     <ClCompile Include="IslandGenerator.cpp" />
     <ClCompile Include="KeyCtl.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapCtl.cpp" />
+    <ClCompile Include="MAP_ID.cpp" />
     <ClCompile Include="SceneMng.cpp" />
+    <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="Unit.cpp" />
     <ClCompile Include="VECTOR2.cpp" />
+    <ClCompile Include="WorldSelect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
+    <ClInclude Include="Factory.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="ImageMng.h" />
     <ClInclude Include="IslandGenerator.h" />
     <ClInclude Include="KeyCtl.h" />
     <ClInclude Include="MapCtl.h" />
+    <ClInclude Include="MAP_ID.h" />
     <ClInclude Include="SceneMng.h" />
+    <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="Unit.h" />
     <ClInclude Include="VECTOR2.h" />
+    <ClInclude Include="WorldSelect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

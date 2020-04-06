@@ -71,7 +71,7 @@ void IslandGenerator::IslandMaker()
 				{
 					lpMapCtl.SetMapData(VECTOR2(y, x), id);
 				}
-				if (/*lpMapCtl.GetMapData(VECTOR2(y, x)) == Map_ID::water &&*/ ((x / ChipSize) <= 5 || (y / ChipSize) <= 5 || (x / ChipSize) >= 55 || (y / ChipSize) >= 55))
+				if (((x / ChipSize) <= 5 || (y / ChipSize) <= 5 || (x / ChipSize) >= 55 || (y / ChipSize) >= 55))
 				{
 					lpMapCtl.SetMapData(VECTOR2(y, x), Map_ID::water2);
 				}

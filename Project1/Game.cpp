@@ -2,8 +2,10 @@
 #include "DxLib.h"
 #include "KeyCtl.h"
 #include "BaseScene.h"
-#include "MapCtl.h"
 #include "IslandGenerator.h"
+#include "Factory.h"
+#include "MAP_ID.h"
+#include "MapCtl.h"
 #include "Game.h"
 
 Game::Game()
@@ -23,7 +25,8 @@ int Game::Init()
 	TimeTransFlag = true; //trueでFrame加算
 	Debug = false;
 	srand(time(NULL));
-	WorldName = "New World1";
+	WorldName = "New World";
+	id = Map_ID::mine;
 	return 0;
 }
 
@@ -110,12 +113,10 @@ void Game::Draw()
 	}
 
 	DrawFormatString(0, 680, 0xffffff, "Mpos.x%d Mpos.y%d",Mpos.x,Mpos.y);
-	DrawFormatString(0, 700, 0xffffff, "type: %d",lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x -100,Mpos.y-50)).color);
-	DrawFormatString(0, 720, 0xffffff, "color: %x", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 50)).color);
-	DrawFormatString(0, 740, 0xffffff, "Lv: %d", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 60)).Lv);
-	DrawFormatString(0, 760, 0xffffff, "ProductionSpeed: %d", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 50)).ProductionSpeed);
-	DrawFormatString(0, 780, 0xffffff, "Nature: %d", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 50)).Nature);
-
+	DrawFormatString(0, 700, 0xffffff, "ID:%d",static_cast<int>(id));
+	DrawFormatString(0, 720, 0xffffff, "type: %d",lpMapCtl.GetPanelConter(Map_ID::field));
+	DrawFormatString(0, 760, 0xffffff, "Nature: %d", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 50)).BuildFlag);
+	lpFactory.Draw();
 	// 裏画面の内容を表画面にコピーする（描画の確定）.
 	ScreenFlip();
 }
@@ -124,23 +125,64 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 {
 	auto Key = controller.GetCtl(NOW);
 	auto KeyOld = controller.GetCtl(OLD);
+	auto Click = (GetMouseInput()&MOUSE_INPUT_LEFT);
+	auto ClickOld = Click;
 
+
+	auto Mpos = VECTOR2(0, 0);
+	GetMousePoint(&Mpos.x, &Mpos.y);
 	Timer(controller);
 	lpMapCtl.SetDate(date);
 	Draw();
-
-	if (Key[KEY_INPUT_D] & ~KeyOld[KEY_INPUT_D])
-	{
-		lpIslandGenerator.IslandInit();
-	}
 
 	if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
 	{
 		lpIslandGenerator.IslandMaker();
 		lpMapCtl.MapSave(true);
-	}if (Key[KEY_INPUT_L] & ~KeyOld[KEY_INPUT_L])
+
+	}
+
+	//設置するIDの切り替え
+	if (Key[KEY_INPUT_LCONTROL] & (~KeyOld[KEY_INPUT_LCONTROL]))
+	{
+		id = (Map_ID)(id + 1);
+		if (id >= Map_ID::water)
+		{
+			id = Map_ID::mine;
+		}
+	}
+
+	//施設の設置
+	if (Click&(ClickOld))
+	{
+		if (lpMapCtl.GetPanelStatus(Mpos + VECTOR2(-100, -50)).BuildFlag == true)
+		{
+			if (id == Map_ID::field)
+			{
+				if (lpMapCtl.GetPanelStatus(Mpos + VECTOR2(-90, -50)).WaterFlag == true
+					|| lpMapCtl.GetPanelStatus(Mpos + VECTOR2(-110, -50)).WaterFlag == true
+					|| lpMapCtl.GetPanelStatus(Mpos + VECTOR2(-100, -60)).WaterFlag == true
+					|| lpMapCtl.GetPanelStatus(Mpos + VECTOR2(-100, -40)).WaterFlag == true)
+				{
+					lpMapCtl.SetMapData(Mpos + VECTOR2(-100, -50), id);
+				}
+			}
+			else
+			{
+				lpMapCtl.SetMapData(Mpos + VECTOR2(-100, -50), id);
+			}
+		}
+	}
+
+	//セーブデータの読み込み
+	if (Key[KEY_INPUT_L] & ~KeyOld[KEY_INPUT_L])
 	{
 		lpMapCtl.MapLoad(WorldName);
+	};
+	if (date.minute % 60 == 0)
+	{
+		lpFactory.UpDate();
+		SaveDrawScreenToPNG(100, 50, 700, 650, ("img/" + WorldName + ".png").c_str());
 	}
 	return move(own);
 }

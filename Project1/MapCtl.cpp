@@ -1,6 +1,8 @@
 #include <string>
 #include <sys/stat.h>
 #include "VECTOR2.h"
+#include "ImageMng.h"
+#include "MAP_ID.h"
 #include "Game.h"
 #include "MapCtl.h"
 struct  DataHeader
@@ -75,6 +77,7 @@ bool MapCtl::MapLoad(string worldname)
 	fread(&expData, sizeof(expData), 1, file);
 	MapDataBace.resize(expData.sizeX * expData.sizeY);
 	fread(&MapDataBace[0], sizeof(Map_ID), MapDataBace.size(), file);
+	this->WorldName = worldname;
 	fclose(file);
 	return true;
 }
@@ -129,6 +132,24 @@ Status MapCtl::GetPanelStatus(const VECTOR2 & pos)
 	return color[static_cast<int>(id)];
 }
 
+int MapCtl::GetPanelConter(const Map_ID id)
+{
+	int cnt = 0;
+	for (int y = 0; y < DisplaySizeY / ChipSize; y++)
+	{
+		for (int x = 0; x < DisplaySizeX / ChipSize; x++)
+		{
+			cnt += (id == MapData[y][x] ? 1 : 0);
+		}
+	}
+	return cnt;
+}
+
+string MapCtl::GetWorldName()
+{
+	return WorldName;
+}
+
 void MapCtl::Draw(void)
 {
 	for (int y = 0;y< DisplaySizeY / ChipSize; y++)
@@ -137,7 +158,7 @@ void MapCtl::Draw(void)
 		{
 			Map_ID id = MapData[y][x];
 
-			DrawBox(drawOffset.x + chipsize.x*x, drawOffset.y + chipsize.y*y,drawOffset.x + chipsize.x*x + ChipSize, drawOffset.y + chipsize.y*y + ChipSize,static_cast<int>(color[static_cast<int>(id)].color),true);
+			DrawGraph(drawOffset.x + chipsize.x*x, drawOffset.y + chipsize.y*y, lpImageMng.GetID("img/panel.png", VECTOR2(10, 10), VECTOR2(5, 2))[static_cast<int>(id)], false);
 		}
 	}
 }
@@ -154,13 +175,18 @@ MapCtl::MapCtl()
 {
 	color =
 	{
-		0x0000ff,0,0,0,Biome::Ocean,true,
-		0x0000a0,0,0,0,Biome::Ocean,true,
-		0x00ff00,0,1,0,Biome::Plain,true,
-		0xc0c0c0,0,1,0,Biome::Mountain,true,
-		0xFFFFBB,0,1,0,Biome::Desert,true,
-		0x005500,0,1,0,Biome::Forest,true,
-		0xffffff,0,1,0,Biome::Ocean,true,
+		/*êlçHï®*/
+		false,false,
+		false,false,
+		false,false,
+		/*é©ëRê∂ê¨ï®*/
+		false,true,
+		false,true,
+		true,false,
+		true,false,
+		true,false,
+		false,false,
+		false,false
 	};
 }
 MapCtl::~MapCtl()
