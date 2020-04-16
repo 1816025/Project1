@@ -13,6 +13,8 @@ public:
 		return s_Instance;
 	}
 	void Run(void);
+	void SetEndFlag(bool flag);
+	bool endflag;
 private:
 	SceneMng();
 	~SceneMng();

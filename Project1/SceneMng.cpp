@@ -9,19 +9,16 @@ void SceneMng::Run(void)
 {
 	activeScene = std::make_unique<TitleScene>();
 	// ゲームループ.
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+	while (ProcessMessage() == 0 && endflag == false)
 	{
 		keyCtl->UpDate();
 		activeScene = activeScene->UpDate(move(activeScene), *keyCtl);
 	}
-	int onButton = MessageBox(NULL, "YES: 保存して終了 NO: 保存せずに終了", "上書きして終了しますがよろしいですか？", MB_YESNO);
-	if (onButton == IDYES)
-	{
-		lpMapCtl.MapSave(false, lpMapCtl.GetWorldName());
-	}
-	if (onButton == IDNO)
-	{
-	}
+}
+
+void SceneMng::SetEndFlag(bool flag)
+{
+	endflag = flag;
 }
 
 SceneMng::SceneMng()
@@ -47,7 +44,7 @@ bool SceneMng::SysInit()
 
 	// グラフィックの描画先を裏画面にセット
 	SetDrawScreen(DX_SCREEN_BACK);
-
+	endflag = false;
 	keyCtl = std::make_unique<KeyCtl>();
 	return true;
 }

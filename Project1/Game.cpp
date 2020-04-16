@@ -1,7 +1,9 @@
+#include <string>
 #include <time.h>
 #include "DxLib.h"
 #include "KeyCtl.h"
 #include "BaseScene.h"
+#include "SceneMng.h"
 #include "IslandGenerator.h"
 #include "Factory.h"
 #include "MAP_ID.h"
@@ -11,6 +13,38 @@
 Game::Game()
 {
 	Init();
+	lpIslandGenerator.IslandMaker();
+	struct stat statBuf;
+	int num = 1;
+	if (stat("data/New World.map", &statBuf) == 0)
+	{
+		while (1)
+		{
+			WorldName = "New World";
+			string number = to_string(num);
+
+			WorldName = WorldName + number;
+
+			string tmpFile = "data/" + WorldName + ".map";
+			if (stat(tmpFile.c_str(), &statBuf) != 0)
+			{
+				lpMapCtl.MapSave(true, WorldName);
+				break;
+			}
+			num++;
+		}
+	}
+	else
+	{
+		lpMapCtl.MapSave(true, "New World");
+		WorldName = "New World";
+	}
+}
+Game::Game(string WorldName)
+{
+	Init();
+	lpMapCtl.MapLoad(WorldName);
+	this->WorldName = WorldName;
 }
 
 Game::~Game()
@@ -25,7 +59,6 @@ int Game::Init()
 	TimeTransFlag = true; //trueでFrame加算
 	Debug = false;
 	srand(time(NULL));
-	WorldName = "New World";
 	id = Map_ID::mine;
 	return 0;
 }
@@ -137,9 +170,6 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 
 	if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
 	{
-		lpIslandGenerator.IslandMaker();
-		lpMapCtl.MapSave(true);
-
 	}
 
 	//設置するIDの切り替え
@@ -174,16 +204,15 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 		}
 	}
 
-	//セーブデータの読み込み
-	if (Key[KEY_INPUT_L] & ~KeyOld[KEY_INPUT_L])
-	{
-		lpMapCtl.MapLoad(WorldName);
-	};
 	if (date.minute % 60 == 0)
 	{
 		lpFactory.UpDate();
-		SaveDrawScreenToPNG(100, 50, 700, 650, ("img/" + WorldName + ".png").c_str());
+		SaveDrawScreenToPNG(100, 50, 700, 650, ("img/worldimg/" + WorldName + ".png").c_str());
+	}
+	if (Key[KEY_INPUT_ESCAPE] & ~KeyOld[KEY_INPUT_ESCAPE])
+	{
+		lpSceneMng.SetEndFlag(true);
+		lpMapCtl.MapSave(false, WorldName);
 	}
 	return move(own);
 }
-

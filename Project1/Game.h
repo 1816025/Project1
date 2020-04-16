@@ -18,6 +18,7 @@ class Game:
 {
 public:
 	Game();
+	Game(string WorldName);
 	~Game();
 	unique_base UpDate(unique_base own,const KeyCtl &controller);
 private:

@@ -48,7 +48,6 @@ public:
 	Map_ID GetMapData(const VECTOR2& pos);
 	Status GetPanelStatus(const VECTOR2& pos);
 	int GetPanelConter(const Map_ID id);
-	string GetWorldName();
 	void Draw(void);
 	void SetPos(VECTOR2 pos);
 	void SetDate(Date date);

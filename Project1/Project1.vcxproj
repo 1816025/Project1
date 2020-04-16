@@ -117,10 +117,13 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(Dxlib_dir)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(Dxlib_dir)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -133,6 +136,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapCtl.cpp" />
     <ClCompile Include="MAP_ID.cpp" />
+    <ClCompile Include="Noise.cpp" />
     <ClCompile Include="SceneMng.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Unit.cpp" />
@@ -148,6 +152,7 @@
     <ClInclude Include="KeyCtl.h" />
     <ClInclude Include="MapCtl.h" />
     <ClInclude Include="MAP_ID.h" />
+    <ClInclude Include="Noise.h" />
     <ClInclude Include="SceneMng.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Unit.h" />

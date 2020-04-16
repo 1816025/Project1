@@ -13,7 +13,7 @@ struct  DataHeader
 	int sizeX;
 	int sizeY;
 };
-bool MapCtl::MapSave(bool first,string worldname)
+bool MapCtl::MapSave(bool first, string worldname)
 {
 	string WorldName = "data/" + worldname + ".map";
 	DataHeader expData
@@ -26,51 +26,17 @@ bool MapCtl::MapSave(bool first,string worldname)
 	};
 	struct stat statBuf;
 	FILE *file;
-	if (first == true && stat(WorldName.c_str(), &statBuf) == 0)
-	{
-		int onButton = MessageBox(NULL, "YES: 上書き NO: 新規保存", "同じファイル名ですが上書きしてもよろしいですか？", MB_YESNO);
-		if (onButton == IDYES)
-		{
-			fopen_s(&file, WorldName.c_str(), "wb");
-			fwrite(&expData, sizeof(expData), 1, file);
-			fwrite(&MapDataBace[0], sizeof(Map_ID)*MapDataBace.size(), 1, file);
-			fclose(file);
-		}
-		if (onButton == IDNO)
-		{
-			int num = 1;
-			while (1)
-			{
-				
-				string number = to_string(num);
-				string tmpFile = "data/" + worldname + number + ".map";
-				if (stat(tmpFile.c_str(),&statBuf) != 0)
-				{
-				printfDx(tmpFile.c_str());
-					fopen_s(&file, tmpFile.c_str(), "wb");
-					fwrite(&expData, sizeof(expData), 1, file);
-					fwrite(&MapDataBace[0], sizeof(Map_ID)*MapDataBace.size(), 1, file);
-					fclose(file);
-					break;
-				}
-				num++;
-			}
-		}
+	fopen_s(&file, WorldName.c_str(), "wb");
+	fwrite(&expData, sizeof(expData), 1, file);
+	fwrite(&MapDataBace[0], sizeof(Map_ID)*MapDataBace.size(), 1, file);
+	fclose(file);
 
-	}
-	else
-	{
-		fopen_s(&file, WorldName.c_str(), "wb");
-		fwrite(&expData, sizeof(expData), 1, file);
-		fwrite(&MapDataBace[0], sizeof(Map_ID)*MapDataBace.size(), 1, file);
-		fclose(file);
-	}
 	return true;
 }
 
 bool MapCtl::MapLoad(string worldname)
 {
-	string WorldName = "data/" + worldname + ".map";
+	string WorldName = "data/" + worldname.erase(worldname.find(".")) + ".map";
 	FILE *file;
 	DataHeader expData;
 	fopen_s(&file, WorldName.c_str(), "rb");
@@ -143,11 +109,6 @@ int MapCtl::GetPanelConter(const Map_ID id)
 		}
 	}
 	return cnt;
-}
-
-string MapCtl::GetWorldName()
-{
-	return WorldName;
 }
 
 void MapCtl::Draw(void)

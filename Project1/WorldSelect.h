@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include <string>
 #include "BaseScene.h"
 using namespace std;
@@ -10,9 +11,15 @@ public:
 	~WorldSelect();
 	unique_base UpDate(unique_base own, const KeyCtl &controller);
 private:
-	string WorldChoice();
+	string WorldChoice(const VECTOR2& Mpos, const KeyCtl & controller);
 	void Draw();
 
-	string worldName;
+	string WorldName;
+	int WorldId;
+
+	vector<string>WorldData;
+
+	FILEINFO FileInfo;
+	DWORD_PTR FindHandle;
 };
 

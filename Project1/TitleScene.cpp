@@ -1,6 +1,7 @@
 #include "DxLib.h"
 #include "ImageMng.h"
 #include "KeyCtl.h"
+#include "SceneMng.h"
 #include "WorldSelect.h"
 #include "Game.h"
 #include "TitleScene.h"
@@ -16,6 +17,8 @@ TitleScene::~TitleScene()
 
 unique_base TitleScene::UpDate(unique_base own, const KeyCtl & controller)
 {
+	auto Key = controller.GetCtl(NOW);
+	auto KeyOld = controller.GetCtl(OLD);
 	auto Click = (GetMouseInput()&MOUSE_INPUT_LEFT);
 	auto ClickOld = Click;
 	VECTOR2 Mpos = VECTOR2(0, 0);
@@ -23,9 +26,15 @@ unique_base TitleScene::UpDate(unique_base own, const KeyCtl & controller)
 	if ((Click&(ClickOld)) && (Mpos > start.NewWorld&&Mpos < start.NewWorld + VECTOR2{ 400,80 }))
 	{
 		return std::make_unique<Game>();
-	}if ((Click&(ClickOld)) && (Mpos > start.Continue&&Mpos < start.Continue + VECTOR2{ 400,80 }))
+	}
+	
+	if ((Click&(ClickOld)) && (Mpos > start.Continue&&Mpos < start.Continue + VECTOR2{ 400,80 }))
 	{
 		return std::make_unique<WorldSelect>();
+	}
+	if (Key[KEY_INPUT_ESCAPE] & ~KeyOld[KEY_INPUT_ESCAPE])
+	{
+		lpSceneMng.SetEndFlag(true);
 	}
 	TitleDraw();
 	return move(own);
