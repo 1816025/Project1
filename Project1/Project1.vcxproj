@@ -137,7 +137,9 @@
     <ClCompile Include="MapCtl.cpp" />
     <ClCompile Include="MAP_ID.cpp" />
     <ClCompile Include="Noise.cpp" />
+    <ClCompile Include="Research.cpp" />
     <ClCompile Include="SceneMng.cpp" />
+    <ClCompile Include="SelectTask.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Unit.cpp" />
     <ClCompile Include="VECTOR2.cpp" />
@@ -153,7 +155,9 @@
     <ClInclude Include="MapCtl.h" />
     <ClInclude Include="MAP_ID.h" />
     <ClInclude Include="Noise.h" />
+    <ClInclude Include="Research.h" />
     <ClInclude Include="SceneMng.h" />
+    <ClInclude Include="SelectTask.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Unit.h" />
     <ClInclude Include="VECTOR2.h" />

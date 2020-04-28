@@ -17,10 +17,8 @@ public:
 	}
 	float GetValue(int x,int y);
 	float ValueNoise(float x, float y);		//ﾊﾞﾘｭｰﾉｲｽﾞ取得
-
 	void SetHash(unsigned int seed);
 	unsigned int GetHash(int x, int y);
-
 
 	float LineInterpolation(float a,float b,float x);	//線形補間
 	float CubicInterpolation(float x);	//キュービック補間

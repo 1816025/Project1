@@ -85,48 +85,46 @@ void IslandGenerator::IslandMaker()
 //	IslandParts(Map_ID::sand,500);
 //	IslandParts(Map_ID::rock,500);
 //	IslandParts(Map_ID::water,100);
-	Map_ID id = Map_ID::water;
+	Map_ID id = Map_ID::water2;
 	for (int i = 0; i < DisplaySizeY; i++)
 	{
 		for (int j = 0; j < DisplaySizeX; j++)
 		{
-			float x = j / (rand() % 2 + 1);
-			float y = i /(rand()%2 + 1);
-			const int tmp_id = (float)(10 * -(lpNoise.ValueNoise(x, y)));
-			switch (tmp_id)
+			float x = (float)j /*(rand() % 2 + 1)*/;
+			float y = (float)i /*(rand()%2 + 1)*/;
+			const int tmp_id = fabsf(floorf((float)255 * (lpNoise.ValueNoise(x, y) + 0.5)));
+
+			if (j  > 2 && i> 2 && j < 57 && i< 57)
 			{
-			case 0:
-				if (rand() % 2 == 0)
+				if (tmp_id < 20)
 				{
 					id = Map_ID::water;
-					break;
+					if (tmp_id < 10)
+					{
+						id = Map_ID::water2;
+					}
 				}
-			case 1:
-			case 2:
-			case 3:
-				id = Map_ID::plain;
-				break;
-			case 4:
-			case 5:
-			case 6:
-			case 7:
-			case 8:
-				id = Map_ID::forest;
-				break;
-			case 9:
-				id = Map_ID::rock;
-				break;
-			default:
-				break;
+				else if (tmp_id >= 20)
+				{
+					id = Map_ID::plain;
+					if (tmp_id > 90)
+					{
+						id = Map_ID::rock;
+					}
+				}
+				if (id < Map_ID::water)
+				{
+					id = Map_ID::water2;
+				}
+				lpMapCtl.SetMapData(VECTOR2(ChipSize *j, ChipSize *i), id);
 			}
-			lpMapCtl.SetMapData(VECTOR2(ChipSize *j, ChipSize *i), id);
+			//lpMapCtl.SetMapData(VECTOR2(ChipSize *j, ChipSize *i), id);
 		}
 	}
 }
 
 void IslandGenerator::IslandInit(void)
 {
-
 	lpMapCtl.SetUp(VECTOR2(DisplaySizeX, DisplaySizeY), VECTOR2(ChipSize, ChipSize), VECTOR2(OffSetX, OffSetY));
 }
 
