@@ -10,8 +10,7 @@ bool KeyCtl::UpDate(void)
 	Click.old = Click.now;
 	Click.now = GetMouseInput();			//ƒNƒŠƒbƒNî•ñ‚Ìæ“¾
 
-	wheel.old = wheel.now;
-	wheel.now = GetMouseWheelRotVol() % 2;	//Î²°Ùî•ñ‚Ìæ“¾
+	wheel = GetMouseWheelRotVol() % 2;	//Î²°Ùî•ñ‚Ìæ“¾
 
 	return true;
 }
@@ -34,11 +33,7 @@ const bool KeyCtl::GetClick(int mousetype, KEY_TYPE type)
 	return Click.now & mousetype;
 }
 
-const bool KeyCtl::CheckWheel(KEY_TYPE type)
+const int &KeyCtl::CheckWheel()const
 {
-	if (type == OLD)
-	{
-		return wheel.old;
-	}
-	return wheel.now & type;
+	return wheel;
 }

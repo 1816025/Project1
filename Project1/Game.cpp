@@ -211,7 +211,14 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	if (date.minute % 60 == 0)
 	{
 		lpFactory.UpDate();
-		SaveDrawScreenToPNG(100, 50, 700, 650, ("img/worldimg/" + WorldName + ".png").c_str());
+		if (WorldName.find(".png") == string::npos)
+		{
+			SaveDrawScreenToPNG(100, 50, 700, 650, ("img/worldimg/" + WorldName + ".png").c_str());
+		}
+		else
+		{
+			SaveDrawScreenToPNG(100, 50, 700, 650, ("img/worldimg/" + WorldName.erase(WorldName.find(".png")) + ".png").c_str());
+		}
 	}
 	if (Key[KEY_INPUT_ESCAPE] & ~KeyOld[KEY_INPUT_ESCAPE])
 	{

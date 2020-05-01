@@ -22,11 +22,11 @@ public:
 	bool UpDate(void);
 	const KeyArray& GetCtl(KEY_TYPE type)const;
 	const bool GetClick(int mousetype, KEY_TYPE type);
-	const bool CheckWheel(KEY_TYPE type);
+	const int &CheckWheel()const;
 private:
 	KeyArray data;
 	KeyArray dataOld;
 	type Click;
-	type wheel;
+	int wheel;
 };
 

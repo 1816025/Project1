@@ -16,7 +16,8 @@ private:
 
 	string WorldName;
 	int WorldId;
-
+	VECTOR2 drawOffset;
+	VECTOR2 Mpos;
 	vector<string>WorldData;
 
 	FILEINFO FileInfo;

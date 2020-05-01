@@ -27,18 +27,6 @@ float Noise::GetValue(int x, int y)
 	return ((float)GetHash(x,y)/(float)HASH_CODE_MAX-1);
 }
 
-float Noise::Grad(unsigned int hash, float a, float b)
-{
-	unsigned int key = hash % 0x4;
-	switch (key)
-	{
-	case 0x0:   return a;   //a * 1.0f + b * 0.0f.
-	case 0x1:   return -a;  //a * -1.0f + b * 0.0f.
-	case 0x2:   return -b;  //a * 0.0f + b * -1.0f.
-	case 0x3:   return b;   //a * 0.0f + b * 1.0f.
-	};
-	return 0.0f;
-}
 ///ÊÞØ­°É²½ÞŽæ“¾
 float Noise::ValueNoise(float x, float y)
 {
