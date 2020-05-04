@@ -2,6 +2,7 @@
 #include <time.h>
 #include "DxLib.h"
 #include "KeyCtl.h"
+#include "ImageMng.h"
 #include "BaseScene.h"
 #include "SceneMng.h"
 #include "Noise.h"
@@ -60,8 +61,16 @@ int Game::Init()
 	date = { 1,1,1,0,0 };
 	Frame = 0;
 	TimeTransFlag = true; //true‚ÅFrame‰ÁŽZ
+	CntSpeed = 1;
 	Debug = false;
 	srand(time(NULL));
+	auto IconSize = [=](string name)
+	{
+		GetGraphSize(lpImageMng.GetID("img/icon.png", VECTOR2(30, 30), VECTOR2(3, 1))[1], &this->IconSize[name].x,&this->IconSize[name].y);
+	};
+	IconSize("stop");
+	IconSize("play");
+	IconSize("fastplay");
 	id = Map_ID::mine;
 	return 0;
 }
@@ -70,11 +79,16 @@ void Game::Timer(const KeyCtl &controller)
 {
 	auto Key = controller.GetCtl(NOW);
 	auto KeyOld = controller.GetCtl(OLD);
+	auto Click = (GetMouseInput()&MOUSE_INPUT_LEFT);
+	auto ClickOld = Click;
+
+	auto Mpos = VECTOR2(0, 0);
+	GetMousePoint(&Mpos.x, &Mpos.y);
 
 	//¹Þ°Ñ“àŽžŠÔ‚ÆÌÚ°Ñ‚Ì‰ÁŽZ
 	if (TimeTransFlag)
 	{
-		Frame++;
+		Frame += CntSpeed;
 		date.minute = (Frame % 60);
 		if (date.minute % 60 == 0)
 		{
@@ -97,17 +111,24 @@ void Game::Timer(const KeyCtl &controller)
 		}
 	}
 
-
-	if (Key[KEY_INPUT_TAB] & ~KeyOld[KEY_INPUT_TAB])
+	for (int num = 0; num < IconSize.size(); num++)
 	{
-		switch (TimeTransFlag)
+		if (Click&(ClickOld) && Mpos > VECTOR2(300 + IconSize["stop"].x * num, 0) && Mpos < VECTOR2(300 + IconSize["stop"].x * num + IconSize["stop"].x, IconSize["stop"].y))
 		{
-		case true:
-			TimeTransFlag = false;
-			break;
-		case false:
-			TimeTransFlag = true;
-			break;
+			switch (num)
+			{
+			case 0:
+				TimeTransFlag = false;
+				break;
+			case 1:
+				TimeTransFlag = true;
+				CntSpeed = 1;
+				break;
+			case 2:
+				TimeTransFlag = true;
+				CntSpeed = 2;
+				break;
+			}
 		}
 	}
 
@@ -147,6 +168,15 @@ void Game::Draw()
 	{
 		DrawLine(100+(ChipSize*x), 50,100+ (ChipSize*x), 50+(ChipSize*(DisplaySizeX / ChipSize)),  0x666666);
 	}
+
+	auto Draw = [=](string path,int num)
+	{
+		DrawGraph(300 + (IconSize[path].x * num), 0, lpImageMng.GetID("img/icon.png", VECTOR2(30, 30), VECTOR2(3, 1))[num], true);
+	};
+
+	Draw("stop",0);
+	Draw("play",1);
+	Draw("fastplay",2);
 
 	DrawFormatString(0, 680, 0xffffff, "Mpos.x%d Mpos.y%d",Mpos.x,Mpos.y);
 	DrawFormatString(0, 700, 0xffffff, "ID:%d",static_cast<int>(id));

@@ -1,4 +1,6 @@
 #pragma once
+#include <map>
+#include "VECTOR2.h"
 #include "BaseScene.h"
 #include "MAP_ID.h"
 #include "KeyCtl.h"
@@ -27,10 +29,12 @@ private:
 	void Draw();
 	bool TimeTransFlag;
 	int Frame;
+	int CntSpeed;
 	int seed;
 	Date date;
 	bool Debug;
 	string WorldName;
 	Map_ID id;
+	map<string, VECTOR2> IconSize;
 };
 
