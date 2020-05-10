@@ -52,7 +52,7 @@ void WorldSelect::Draw()
 		DrawFormatString(0 ,20, 0xffffff, "%d", Mpos.y);
 		DrawFormatString(140 , ScreenSize.y / 2 + drawOffset.y+ 140 * cnt, 0xffffff, "%s", WorldData[cnt].c_str());
 		DrawRotaGraph2(10, ScreenSize.y/2 + drawOffset.y+140 * cnt, 0, 0, 0.2, 0, IMAGE_ID("img/worldimg/" + WorldData[cnt])[0], false, false);
-		DrawBox(10 , ScreenSize.y / 2 + drawOffset.y+ 140 * cnt, 150 , ScreenSize.y / 2 +120+ drawOffset.y + 140 * cnt, 0xff00, false);
+		DrawBox(10 , ScreenSize.y / 2 + drawOffset.y+ 140 * cnt, 130 , ScreenSize.y / 2 +120+ drawOffset.y + 140 * cnt, 0xff00, false);
 	}
 	ScreenFlip();
 }

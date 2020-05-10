@@ -1,17 +1,24 @@
 #include <string>
 #include <time.h>
 #include "DxLib.h"
-#include "KeyCtl.h"
-#include "ImageMng.h"
+
 #include "BaseScene.h"
 #include "SceneMng.h"
-#include "Noise.h"
-#include "IslandGenerator.h"
-#include "Factory.h"
+
+#include "KeyCtl.h"				//どのｷｰが押されたかを知る
+
+#include "ImageMng.h"			//画像の読み込み
+#include "SoundMng.h"			//Soundの読み込み、再生
+
+#include "Factory.h"			//資源の生成処理
+#include "Research.h"			//研究項目
+
+#include "Noise.h"				//ノイズを生成する
+#include "IslandGenerator.h"	//Mapを作成する
 #include "MAP_ID.h"
-#include "MapCtl.h"
-#include "Research.h"
-#include "Game.h"
+#include "MapCtl.h"				//マップの操作
+
+#include "Game.h"				//自分
 
 Game::Game()
 {
@@ -58,7 +65,7 @@ Game::~Game()
 int Game::Init()
 {
 	lpIslandGenerator.IslandInit();
-	date = { 1,1,1,0,0 };
+	date = {Season::spring,Weather::Sunny, 1,1,1,0,0 };
 	Frame = 0;
 	TimeTransFlag = true; //trueでFrame加算
 	CntSpeed = 1;
@@ -72,6 +79,9 @@ int Game::Init()
 	IconSize("play");
 	IconSize("fastplay");
 	id = Map_ID::mine;
+
+	lpSoundMng.GetID("sounddata/wave.mp3");
+	lpSoundMng.PlaySound("sounddata/wave.mp3", PlayType::Loop);
 	return 0;
 }
 
@@ -95,12 +105,30 @@ void Game::Timer(const KeyCtl &controller)
 			date.hour += 1;
 			if (date.hour % 24 == 0)
 			{
+				//SetWeather();
 				date.day += 1;
 				date.hour = 0;
 				if (date.day % 30 == 0)
 				{
 					date.month += 1;
 					date.day = 1;
+					switch ((date.month / 4)%4)
+					{
+					case 0:
+						date.season = Season::spring;
+						break;
+					case 1:
+						date.season = Season::summer;
+						break;
+					case 2:
+						date.season = Season::autumn;
+						break;
+					case 3:
+						date.season = Season::winter;
+						break;
+					default:
+						break;
+					}
 					if (date.month % 12 == 0)
 					{
 						date.year += 1;
@@ -118,13 +146,18 @@ void Game::Timer(const KeyCtl &controller)
 			switch (num)
 			{
 			case 0:
+				lpSoundMng.StopSound("sounddata/wave.mp3");
 				TimeTransFlag = false;
 				break;
 			case 1:
+				lpSoundMng.StopSound("sounddata/wave.mp3");
+				lpSoundMng.PlaySound("sounddata/wave.mp3", PlayType::Loop);
 				TimeTransFlag = true;
 				CntSpeed = 1;
 				break;
 			case 2:
+				lpSoundMng.StopSound("sounddata/wave.mp3");
+				lpSoundMng.PlaySound("sounddata/wave.mp3", PlayType::Loop);
 				TimeTransFlag = true;
 				CntSpeed = 2;
 				break;
@@ -145,6 +178,27 @@ void Game::Timer(const KeyCtl &controller)
 		}
 	}
 
+}
+
+void Game::SetWeather(Season season)
+{
+	auto weather = []()
+	{
+	
+	};
+	switch (season)
+	{
+	case Season::spring:
+		break;
+	case Season::summer:
+		break;
+	case Season::autumn:
+		break;
+	case Season::winter:
+		break;
+	default:
+		break;
+	}
 }
 
 void Game::Draw()
