@@ -1,4 +1,5 @@
 #include "DxLib.h"
+#include "Game.h"
 #include "Factory.h"
 
 Factory::Factory()
@@ -23,11 +24,25 @@ void Factory::Draw()
 	DrawFormatString(300, 720, 0xffffff, "Stockpile.Wood: %d", Stockpile.Wood);
 }
 
-void Factory::UpDate(void)
+void Factory::UpDate(Date date)
 {
-	Stockpile.Gold += (status[0].Flag == true ? status[0].Amount * lpMapCtl.GetPanelConter(Map_ID::mine) : 0);
-	Stockpile.Food += (status[1].Flag == true ? status[1].Amount * lpMapCtl.GetPanelConter(Map_ID::field) : 0);
+	if (date.season == Season::winter)
+	{
+		Stockpile.Food += (status[1].Flag == true ? (status[1].Amount * lpMapCtl.GetPanelConter(Map_ID::field))*0.5 : 0);
+	}
+	else
+	{
+		if (date.weather == Weather::Rain)
+		{
+			Stockpile.Food += (status[1].Flag == true ? (status[1].Amount * lpMapCtl.GetPanelConter(Map_ID::field))*1.5 : 0);
+		}
+		else
+		{
+			Stockpile.Food += (status[1].Flag == true ? status[1].Amount * lpMapCtl.GetPanelConter(Map_ID::field) : 0);
+		}
+	}
 	Stockpile.Wood += (status[2].Flag == true ? status[2].Amount * lpMapCtl.GetPanelConter(Map_ID::hut) : 0);
+	Stockpile.Gold += (status[0].Flag == true ? status[0].Amount * lpMapCtl.GetPanelConter(Map_ID::mine) : 0);
 }
 
 STOCK Factory::GetStockPile(void)

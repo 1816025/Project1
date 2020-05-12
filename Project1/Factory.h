@@ -1,6 +1,7 @@
 #pragma once
 #include "MapCtl.h"
 
+class Game;
 
 struct FactoryStatus
 {
@@ -27,7 +28,7 @@ public:
 		static Factory s_Instance;
 		return s_Instance;
 	}
-	void UpDate(void);
+	void UpDate(Date);
 	void Draw();
 	STOCK GetStockPile(void);
 private:

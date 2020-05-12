@@ -100,40 +100,45 @@ void Game::Timer(const KeyCtl &controller)
 	if (TimeTransFlag)
 	{
 		Frame += CntSpeed;
-		date.minute = (Frame % 60);
-		if (date.minute % 60 == 0)
+		if (Frame >= 1)
 		{
-			date.hour += 1;
-			if (date.hour % 24 == 0)
+		date.minute+=1;
+		Frame = 0;
+			if (date.minute % 60 == 0)
 			{
-				SetWeather(static_cast<Season>(date.month% static_cast<int>(Season::max)));
-				date.day += 1;
-				date.hour = 0;
-				if (date.day % 30 == 0)
+				date.hour += 1;
+				date.minute = 0;
+				if (date.hour % 24 == 0)
 				{
-					date.month += 1;
-					date.day = 1;
-					switch ((date.month / 4)%4)
+					SetWeather(static_cast<Season>(date.month% static_cast<int>(Season::max)));
+					date.day += 1;
+					date.hour = 0;
+					if (date.day % 30 == 0)
 					{
-					case 0:
-						date.season = Season::spring;
-						break;
-					case 1:
-						date.season = Season::summer;
-						break;
-					case 2:
-						date.season = Season::autumn;
-						break;
-					case 3:
-						date.season = Season::winter;
-						break;
-					default:
-						break;
-					}
-					if (date.month % 12 == 0)
-					{
-						date.year += 1;
-						date.month = 1;
+						date.month += 1;
+						date.day = 1;
+						switch ((date.month / 4) % 4)
+						{
+						case 0:
+							date.season = Season::spring;
+							break;
+						case 1:
+							date.season = Season::summer;
+							break;
+						case 2:
+							date.season = Season::autumn;
+							break;
+						case 3:
+							date.season = Season::winter;
+							break;
+						default:
+							break;
+						}
+						if (date.month % 12 == 0)
+						{
+							date.year += 1;
+							date.month = 1;
+						}
 					}
 				}
 			}
@@ -160,7 +165,7 @@ void Game::Timer(const KeyCtl &controller)
 				lpSoundMng.StopSound("sounddata/wave.mp3");
 				lpSoundMng.PlaySound("sounddata/wave.mp3", PlayType::Loop);
 				TimeTransFlag = true;
-				CntSpeed = 2;
+				CntSpeed = 10;
 				break;
 			}
 		}
@@ -231,7 +236,7 @@ void Game::Draw()
 	}
 
 	lpMapCtl.Draw();
-	DrawFormatString(0, 0, 0xffffff, "%d年目 %2d月%2d日\n%2d時%2d分\n天気%d", date.year, date.month, date.day, date.hour, date.minute,date.weather);
+	DrawFormatString(0, 0, 0xffffff, "%d年目 %2d月%2d日\n%2d時%2d分\n季節%d\n天気%d", date.year, date.month, date.day, date.hour, date.minute,date.season,date.weather);
 	for (int y = 0; y <= DisplaySizeY / ChipSize; y++)
 	{
 		DrawLine(100,  50+(ChipSize*y), 100+ (ChipSize * (DisplaySizeY / ChipSize)), 50+(ChipSize*y), 0x666666);
@@ -312,7 +317,7 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 
 	if (date.minute % 60 == 0)
 	{
-		lpFactory.UpDate();
+		lpFactory.UpDate(date);
 		if (WorldName.find(".png") == string::npos)
 		{
 			SaveDrawScreenToPNG(100, 50, 700, 650, ("img/worldimg/" + WorldName + ".png").c_str());
