@@ -17,6 +17,7 @@
 #include "IslandGenerator.h"	//Mapを作成する
 #include "MAP_ID.h"
 #include "MapCtl.h"				//マップの操作
+#include "Event.h"				//イベント
 
 #include "Game.h"				//自分
 
@@ -105,7 +106,7 @@ void Game::Timer(const KeyCtl &controller)
 			date.hour += 1;
 			if (date.hour % 24 == 0)
 			{
-				//SetWeather();
+				SetWeather(static_cast<Season>(date.month% static_cast<int>(Season::max)));
 				date.day += 1;
 				date.hour = 0;
 				if (date.day % 30 == 0)
@@ -182,22 +183,39 @@ void Game::Timer(const KeyCtl &controller)
 
 void Game::SetWeather(Season season)
 {
-	auto weather = []()
+	Weather tmp_Weather = Weather::Sunny;
+	if (date.cainWeather <= 0)
 	{
-	
-	};
-	switch (season)
+		date.cainWeather = (rand() % 10) + 1;
+		tmp_Weather = static_cast<Weather>(rand() % static_cast<int>(Weather::Snow));
+		if (season == Season::winter && date.weather == Weather::Rain)
+		{
+			date.weather = Weather::Snow;
+		}
+		else
+		{
+			if (date.weather != tmp_Weather)
+			{
+				date.weather = tmp_Weather;
+			}
+			else
+			{
+				date.weather = Weather::Cloudy;
+			}
+		}
+	}
+	if (date.cainWeather >= 7 || lpEvent.CheckEvent() == true)
 	{
-	case Season::spring:
-		break;
-	case Season::summer:
-		break;
-	case Season::autumn:
-		break;
-	case Season::winter:
-		break;
-	default:
-		break;
+		lpEvent.PlayEvent(EVENT::AbnormalWeather);
+		if (date.cainWeather <= 0)
+		{
+			lpEvent.SetEvent(false);
+		}
+		date.cainWeather--;
+	}
+	if (date.cainWeather <= 7 && lpEvent.CheckEvent() == false)
+	{
+		date.cainWeather--;
 	}
 }
 
@@ -213,7 +231,7 @@ void Game::Draw()
 	}
 
 	lpMapCtl.Draw();
-	DrawFormatString(0, 0, 0xffffff, "%d年目 %2d月%2d日\n%2d時%2d分", date.year, date.month, date.day, date.hour, date.minute);
+	DrawFormatString(0, 0, 0xffffff, "%d年目 %2d月%2d日\n%2d時%2d分\n天気%d", date.year, date.month, date.day, date.hour, date.minute,date.weather);
 	for (int y = 0; y <= DisplaySizeY / ChipSize; y++)
 	{
 		DrawLine(100,  50+(ChipSize*y), 100+ (ChipSize * (DisplaySizeY / ChipSize)), 50+(ChipSize*y), 0x666666);
