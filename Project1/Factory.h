@@ -31,6 +31,7 @@ public:
 	void UpDate(Date);
 	void Draw();
 	STOCK GetStockPile(void);
+	void SetStockPile(int food ,int Gold,int Iron , int Wood);
 private:
 	Factory();
 	~Factory();

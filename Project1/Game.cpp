@@ -100,9 +100,9 @@ void Game::Timer(const KeyCtl &controller)
 	if (TimeTransFlag)
 	{
 		Frame += CntSpeed;
-		if (Frame >= 1)
+		if (Frame > 1)
 		{
-		date.minute+=1;
+		date.hour+=1;
 		Frame = 0;
 			if (date.minute % 60 == 0)
 			{
@@ -189,8 +189,12 @@ void Game::Timer(const KeyCtl &controller)
 void Game::SetWeather(Season season)
 {
 	Weather tmp_Weather = Weather::Sunny;
-	if (date.cainWeather <= 0)
+	if (date.cainWeather < 0)
 	{
+		if (date.weather == Weather::Storm)
+		{
+			lpFactory.SetStockPile(0,0,0, -((rand() % 5) + 5));
+		}
 		date.cainWeather = (rand() % 10) + 1;
 		tmp_Weather = static_cast<Weather>(rand() % static_cast<int>(Weather::Snow));
 		if (season == Season::winter && date.weather == Weather::Rain)
@@ -199,6 +203,13 @@ void Game::SetWeather(Season season)
 		}
 		else
 		{
+			if (season == Season::summer && date.weather == Weather::Rain)
+			{
+				if (rand() % 3 == 0)
+				{
+					date.weather = Weather::Storm;
+				}
+			}
 			if (date.weather != tmp_Weather)
 			{
 				date.weather = tmp_Weather;
@@ -209,12 +220,13 @@ void Game::SetWeather(Season season)
 			}
 		}
 	}
+
 	if (date.cainWeather >= 7 || lpEvent.CheckEvent() == true)
 	{
-		lpEvent.PlayEvent(EVENT::AbnormalWeather);
+		lpEvent.PlayEvent(EVENT::AbnormalWeather,date.weather);
 		if (date.cainWeather <= 0)
 		{
-			lpEvent.SetEvent(false);
+			lpEvent.SetEvent(false,lpEvent.GetEvent().id);
 		}
 		date.cainWeather--;
 	}
@@ -281,13 +293,15 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 
 	if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
 	{
+		date.cainWeather = 10;
+		date.weather = Weather::Sunny;
 	}
 
 	//Ý’u‚·‚éID‚ÌØ‚è‘Ö‚¦
 	if (Key[KEY_INPUT_LCONTROL] & (~KeyOld[KEY_INPUT_LCONTROL]))
 	{
 		id = (Map_ID)(id + 1);
-		if (id >= Map_ID::water)
+		if (id >= Map_ID::water2)
 		{
 			id = Map_ID::mine;
 		}
