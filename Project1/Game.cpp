@@ -4,6 +4,7 @@
 
 #include "BaseScene.h"
 #include "SceneMng.h"
+#include "Pose.h"
 
 #include "KeyCtl.h"				//どのｷｰが押されたかを知る
 
@@ -272,6 +273,10 @@ void Game::Draw()
 	DrawFormatString(0, 720, 0xffffff, "type: %d",lpMapCtl.GetPanelConter(Map_ID::field));
 	DrawFormatString(0, 760, 0xffffff, "Nature: %d", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 50)).BuildFlag);
 	lpFactory.Draw();
+	if (TimeTransFlag == false)
+	{
+		lpPose.Draw();
+	}
 	lpResarch.Draw(TimeTransFlag);
 	// 裏画面の内容を表画面にコピーする（描画の確定）.
 	ScreenFlip();
