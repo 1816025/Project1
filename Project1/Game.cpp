@@ -12,7 +12,7 @@
 #include "SoundMng.h"			//Soundの読み込み、再生
 
 #include "Factory.h"			//資源の生成処理
-#include "Research.h"			//研究項目
+#include "Laboratory.h"			//研究項目
 
 #include "Noise.h"				//ノイズを生成する
 #include "IslandGenerator.h"	//Mapを作成する
@@ -73,17 +73,17 @@ int Game::Init()
 	CntSpeed = 1;
 	Debug = false;
 	srand(time(NULL));
-	auto IconSize = [=](string name)
+	auto ImageSize = [=](string name,VECTOR2 divSize,VECTOR2 divCnt)
 	{
-		GetGraphSize(lpImageMng.GetID("img/icon.png", VECTOR2(30, 30), VECTOR2(3, 1))[1], &this->IconSize[name].x,&this->IconSize[name].y);
+		GetGraphSize(lpImageMng.GetID("img/" + name + ".png", divSize, divCnt)[1], &this->ImageSize[name].x,&this->ImageSize[name].y);
 	};
-	IconSize("stop");
-	IconSize("play");
-	IconSize("fastplay");
+	ImageSize("icon", VECTOR2(30, 30), VECTOR2(3, 1));
+	ImageSize("TAB", VECTOR2(150, 70), VECTOR2(2, 1));
 	id = Map_ID::mine;
 
 	lpSoundMng.GetID("sounddata/wave.mp3");
 	lpSoundMng.PlaySound("sounddata/wave.mp3", PlayType::Loop);
+	lpLabo.GetInstance();
 	return 0;
 }
 
@@ -103,8 +103,8 @@ void Game::Timer(const KeyCtl &controller)
 		Frame += CntSpeed;
 		if (Frame > 1)
 		{
-		date.hour+=1;
-		Frame = 0;
+			date.hour += 1;
+			Frame = 0;
 			if (date.minute % 60 == 0)
 			{
 				date.hour += 1;
@@ -146,9 +146,9 @@ void Game::Timer(const KeyCtl &controller)
 		}
 	}
 
-	for (int num = 0; num < IconSize.size(); num++)
+	for (int num = 0; num < 3; num++)
 	{
-		if (Click&(ClickOld) && Mpos > VECTOR2(300 + IconSize["stop"].x * num, 0) && Mpos < VECTOR2(300 + IconSize["stop"].x * num + IconSize["stop"].x, IconSize["stop"].y))
+		if (Click&(ClickOld) && Mpos > VECTOR2(300 + ImageSize["icon"].x * num, 0) && Mpos < VECTOR2(300 + ImageSize["icon"].x * num + ImageSize["icon"].x, ImageSize["icon"].y))
 		{
 			switch (num)
 			{
@@ -171,6 +171,16 @@ void Game::Timer(const KeyCtl &controller)
 			}
 		}
 	}
+	for (int num = 0; num < 2; num++)
+	{
+		if (Click&(ClickOld) && Mpos > VECTOR2(15 + (15 * num + ImageSize["TAB"].x*num), ScreenSize.y - ImageSize["TAB"].y) && Mpos < VECTOR2(ImageSize["TAB"].x + 15 + (15 * num + ImageSize["TAB"].x*num), ScreenSize.y))
+		{
+			if (num == 1)
+			{
+				TimeTransFlag = false;
+			}
+		}
+	}
 
 	if (Key[KEY_INPUT_F3] & ~KeyOld[KEY_INPUT_F3])
 	{
@@ -184,7 +194,6 @@ void Game::Timer(const KeyCtl &controller)
 			break;
 		}
 	}
-
 }
 
 void Game::SetWeather(Season season)
@@ -258,15 +267,15 @@ void Game::Draw()
 	{
 		DrawLine(100+(ChipSize*x), 50,100+ (ChipSize*x), 50+(ChipSize*(DisplaySizeX / ChipSize)),  0x666666);
 	}
-
-	auto Draw = [=](string path,int num)
+	for(int num = 0; num <3;num++)
 	{
-		DrawGraph(300 + (IconSize[path].x * num), 0, lpImageMng.GetID("img/icon.png", VECTOR2(30, 30), VECTOR2(3, 1))[num], true);
+		DrawGraph(300 + (ImageSize["icon"].x * num), 0, lpImageMng.GetID("img/icon.png", VECTOR2(30, 30), VECTOR2(3, 1))[num], true);
 	};
+	for (int num = 0; num < 2; num++)
+	{
+		DrawGraph(15+(15*num + ImageSize["TAB"].x*num), ScreenSize.y - ImageSize["TAB"].y, lpImageMng.GetID("img/TAB.png", VECTOR2(150, 70), VECTOR2(2, 1))[num], true);
+	}
 
-	Draw("stop",0);
-	Draw("play",1);
-	Draw("fastplay",2);
 
 	DrawFormatString(0, 680, 0xffffff, "Mpos.x%d Mpos.y%d",Mpos.x,Mpos.y);
 	DrawFormatString(0, 700, 0xffffff, "ID:%d",static_cast<int>(id));
@@ -275,9 +284,15 @@ void Game::Draw()
 	lpFactory.Draw();
 	if (TimeTransFlag == false)
 	{
-		lpPose.Draw();
+		if (OptionFlag)
+		{
+			lpPose.Draw(true);
+		}
+		else
+		{
+			lpPose.Draw(false);
+		}
 	}
-	lpResarch.Draw(TimeTransFlag);
 	// 裏画面の内容を表画面にコピーする（描画の確定）.
 	ScreenFlip();
 }

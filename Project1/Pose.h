@@ -8,7 +8,7 @@ public:
 		static Pose s_Incetance;
 		return s_Incetance;
 	}
-	void Draw(void);
+	void Draw(bool Optionflag);
 private:
 	Pose();
 	~Pose();

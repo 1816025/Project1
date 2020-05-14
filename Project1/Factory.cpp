@@ -20,9 +20,9 @@ Factory::~Factory()
 
 void Factory::Draw()
 {
-	DrawFormatString(300, 680, 0xffffff, "Stockpile.Gold: %d", Stockpile.Gold);
-	DrawFormatString(300, 700, 0xffffff, "Stockpile.Food: %d", Stockpile.Food);
-	DrawFormatString(300, 720, 0xffffff, "Stockpile.Wood: %d", Stockpile.Wood);
+	DrawFormatString(350, 680, 0xffffff, "Stockpile.Gold: %d", Stockpile.Gold);
+	DrawFormatString(350, 700, 0xffffff, "Stockpile.Food: %d", Stockpile.Food);
+	DrawFormatString(350, 720, 0xffffff, "Stockpile.Wood: %d", Stockpile.Wood);
 }
 
 void Factory::UpDate(Date date)

@@ -50,6 +50,7 @@ private:
 	void SetWeather(Season season);					//“VŒó‚Ì‘€ì
 	void Draw(void);
 	bool TimeTransFlag;
+	bool OptionFlag;
 	int Frame;
 	int CntSpeed;
 	int seed;
@@ -57,6 +58,6 @@ private:
 	bool Debug;
 	string WorldName;
 	Map_ID id;
-	map<string, VECTOR2> IconSize;
+	map<string, VECTOR2> ImageSize;
 };
 
