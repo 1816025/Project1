@@ -90,6 +90,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(Dxlib_dir)</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(Dxlib_dir)</AdditionalLibraryDirectories>
@@ -128,20 +129,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BaseScene.cpp" />
+    <ClCompile Include="BookList.cpp" />
     <ClCompile Include="Event.cpp" />
-    <ClCompile Include="Factory.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="ImageMng.cpp" />
-    <ClCompile Include="IslandGenerator.cpp" />
     <ClCompile Include="KeyCtl.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MapCtl.cpp" />
     <ClCompile Include="MAP_ID.cpp" />
     <ClCompile Include="Noise.cpp" />
     <ClCompile Include="Pose.cpp" />
-    <ClCompile Include="Research.cpp" />
     <ClCompile Include="SceneMng.cpp" />
-    <ClCompile Include="SelectTask.cpp" />
     <ClCompile Include="SoundMng.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="Unit.cpp" />
@@ -150,19 +148,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseScene.h" />
+    <ClInclude Include="BookList.h" />
     <ClInclude Include="Event.h" />
-    <ClInclude Include="Factory.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="ImageMng.h" />
-    <ClInclude Include="IslandGenerator.h" />
     <ClInclude Include="KeyCtl.h" />
     <ClInclude Include="MapCtl.h" />
     <ClInclude Include="MAP_ID.h" />
     <ClInclude Include="Noise.h" />
     <ClInclude Include="Pose.h" />
-    <ClInclude Include="Research.h" />
     <ClInclude Include="SceneMng.h" />
-    <ClInclude Include="SelectTask.h" />
     <ClInclude Include="SoundMng.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="Unit.h" />

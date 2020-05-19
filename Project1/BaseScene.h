@@ -2,12 +2,12 @@
 #include <DxLib.h>
 #include <memory>
 
-#define ScreenSize VECTOR2(800,800)
-#define DisplaySizeX 600
-#define DisplaySizeY 600
-#define ChipSize 10
-#define OffSetX 100
-#define OffSetY 50
+#define ScreenSize VECTOR2(800,599)
+#define DisplaySizeX 400
+#define DisplaySizeY 400
+#define ChipSize 16
+#define OffSetX 300
+#define OffSetY 100
 
 class BaseScene;
 class KeyCtl;

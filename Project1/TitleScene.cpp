@@ -49,6 +49,7 @@ void TitleScene::Init()
 void TitleScene::TitleDraw(void)
 {
 	ClsDrawScreen();
+	DrawGraph(0, 0,lpImageMng.GetID("img/books.png")[0],false);
 	DrawGraph(start.NewWorld.x,start.NewWorld.y,lpImageMng.GetID("img/New start.png", VECTOR2(400, 80), VECTOR2(1, 2))[1],false);
 	DrawGraph(start.Continue.x, start.Continue.y,lpImageMng.GetID("img/ReStart.png", VECTOR2(400, 80), VECTOR2(1, 2))[1],false);
 	ScreenFlip();

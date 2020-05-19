@@ -3,37 +3,22 @@
 #include "VECTOR2.h"
 #include "BaseScene.h"
 #include "MAP_ID.h"
-#include "KeyCtl.h"
-
-enum class Season
+enum class DayCycle
 {
-	spring,
-	summer,
-	autumn,
-	winter,
-	max
-};
-enum class Weather
-{
-	Sunny,
-	Cloudy,
-	Rain,
-	Snow,
-	Storm,
-	Blizzard,
-	max
+	Day,
+	Night,
+	Max
 };
 struct Date
 {
-	Season season;		//現在の季節
-	Weather weather;	//現在の天気
-	int cainWeather;	//何時間同じ天気が続いたか
+	DayCycle daycycle;
 	int year;
 	int month;
 	int day;
 	int hour;
 	int minute;
 };
+class  KeyCtl;
 
 using namespace std;
 class Game:
@@ -47,10 +32,13 @@ public:
 private:
 	int Init(void);
 	void Timer(const KeyCtl &controller);	//ｹﾞｰﾑ内時間とﾌﾚｰﾑの計測
-	void SetWeather(Season season);					//天候の操作
 	void Draw(void);
+	void  Phase(DayCycle cycle);
+
+	bool OpenFlag;
 	bool TimeTransFlag;
 	bool OptionFlag;
+	bool SetObjectFlag;
 	int Frame;
 	int CntSpeed;
 	int seed;

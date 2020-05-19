@@ -1,0 +1,87 @@
+#include "DxLib.h"
+#include "VECTOR2.h"
+#include "BaseScene.h"
+#include "KeyCtl.h"
+#include "MAP_ID.h"
+#include "MapCtl.h"
+#include "ImageMng.h"
+#include "BookList.h"
+#include "Game.h"
+#include "Event.h"
+
+Event::Event()
+{
+	GetGraphSize(lpImageMng.GetID("img/bookicon.png")[0], &ImageSize["icon"].x, &ImageSize["icon"].y);
+}
+
+Event::~Event()
+{
+}
+
+void Event::UpDate(const KeyCtl &controller)
+{
+	auto Key = controller.GetCtl(NOW);
+	auto KeyOld = controller.GetCtl(OLD);
+	auto Click = (GetMouseInput()&MOUSE_INPUT_LEFT);
+	auto ClickOld = Click;
+	VECTOR2 Mpos = { 0,0 };
+	GetMousePoint(&Mpos.x, &Mpos.y);
+	for (int num = 0; num < Candidate.size(); num++)
+	{
+		if (Click&(ClickOld) 
+			&& Mpos > VECTOR2(OffSetX / 1.5 + (OffSetX / 1.5)*num, ScreenSize.y / 2 + OffSetY / 2)
+			&&Mpos < VECTOR2((OffSetX / 1.5) + (OffSetX / 1.5)*num, ScreenSize.y / 2 + OffSetY / 2) + ImageSize["icon"])
+		{
+			SetEvent(false, EVENT::Donation);
+			lpBookList.SetLibrary(Candidate[num]);
+		}
+	}
+}
+
+void Event::Draw(void)
+{
+	for (int num = 0; num < Candidate.size(); num++)
+	{
+		DrawGraph(OffSetX/1.5 + (OffSetX/1.5)*num, ScreenSize.y/2 +OffSetY/2, lpImageMng.GetID("img/bookicon.png")[0], true);
+		DrawFormatString(OffSetX/2 + (OffSetX / 1.5)*num, ScreenSize.y / 2 - OffSetY / 1.5, 0xffffff, "%s", Candidate[num].c_str());
+	}
+		DrawFormatString(0,0, 0xffffff, "%d\n%d\n%d", Candidate[0],Candidate[1],Candidate[2]);
+}
+
+void Event::PlayEvent(EVENT eventtype)
+{
+	SetEvent(true, eventtype);
+
+	if (eventtype == EVENT::Donation)
+	{
+		for (int num = 0; num < 3; num++)
+		{
+			auto tmpf = lpBookList.GetArchive(rand() % lpBookList.GetArchiveSize());
+			if (std::find(Candidate.begin(), Candidate.end(), tmpf)== Candidate.end())
+			{
+				Candidate[num] = tmpf;
+			}
+			else
+			{
+				num--;
+				continue;
+			}
+		}
+	}
+}
+
+const bool Event::CheckEvent()
+{
+	return data.flag;
+}
+
+void Event::SetEvent(bool flag, EVENT eventtype)
+{
+	data.flag = flag;
+	data.id = eventtype;
+}
+
+const EventData Event::GetEvent()
+{
+	return data;
+}

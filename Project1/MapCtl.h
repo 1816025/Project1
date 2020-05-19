@@ -9,7 +9,7 @@
 struct Status
 {
 	bool BuildFlag;
-	bool WaterFlag;
+	bool MoveFlag;
 };
 
 #define lpMapCtl MapCtl::GetInstance()

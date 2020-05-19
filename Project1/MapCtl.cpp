@@ -26,7 +26,7 @@ bool MapCtl::MapSave(bool first, string worldname)
 	};
 	struct stat statBuf;
 	FILE *file;
-	fopen_s(&file, WorldName.c_str(), "wb");
+	fopen_s(&file, WorldName.c_str(), "w");
 	fwrite(&expData, sizeof(expData), 1, file);
 	fwrite(&MapDataBace[0], sizeof(Map_ID)*MapDataBace.size(), 1, file);
 	fclose(file);
@@ -61,7 +61,7 @@ bool MapCtl::SetUp(const VECTOR2 & size, const VECTOR2 & chipSize, const VECTOR2
 	}
 	for (int j = 0; j < MapDataBace.size(); j++)
 	{
-		MapDataBace[j] = Map_ID::water2;
+		MapDataBace[j] = Map_ID::NON;
 	}
 	return false;
 }
@@ -119,7 +119,7 @@ void MapCtl::Draw(void)
 		{
 			Map_ID id = MapData[y][x];
 
-			DrawGraph(drawOffset.x + chipsize.x*x, drawOffset.y + chipsize.y*y, lpImageMng.GetID("img/panel.png", VECTOR2(10, 10), VECTOR2(5, 2))[static_cast<int>(id)], false);
+			DrawGraph(drawOffset.x + chipsize.x*x, drawOffset.y + chipsize.y*y, lpImageMng.GetID("img/panel.png", VECTOR2(16, 16), VECTOR2(7, 2))[static_cast<int>(id)], false);
 		}
 	}
 }
@@ -136,18 +136,11 @@ MapCtl::MapCtl()
 {
 	color =
 	{
-		/*êlçHï®*/
 		false,false,
 		false,false,
 		false,false,
-		/*é©ëRê∂ê¨ï®*/
-		false,true,
-		false,true,
-		true,false,
-		true,false,
-		true,false,
 		false,false,
-		false,false
+		true,true,
 	};
 }
 MapCtl::~MapCtl()

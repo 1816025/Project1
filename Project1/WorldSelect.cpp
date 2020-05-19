@@ -1,6 +1,7 @@
 #include "DxLib.h"
 #include "ImageMng.h"
 #include "BaseScene.h"
+#include "KeyCtl.h"
 #include "Game.h"
 #include "WorldSelect.h"
 
