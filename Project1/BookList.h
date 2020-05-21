@@ -1,9 +1,31 @@
 #pragma once
 #include <string>
+#include <array>
 #include <vector>
+#include <map>
+
+#ifdef _DEBUG
+#define AST(){\
+	CHAR ast_mes[256];\
+	wsprintf(ast_mes, "%s %d行目￥0", __FILE__, __LINE__);\
+	MessageBox(0, ast_mes, "ｱｻｰﾄ表示", MB_OK);\
+	}
+#else
+#define AST()
+#endif    // _DEBUG
 
 #define lpBookList BookList::GetInstance()
 using namespace std;
+enum class BookTitle
+{
+	Arthur,
+	HanselandGretel,
+	Alice,
+	Hameln,
+	Necronomicon,
+	Humanskin,
+	Max
+};
 
 enum class BookRank
 {
@@ -14,13 +36,13 @@ enum class BookRank
 	Max
 };
 
-struct BookStatus
+struct Book_Status
 {
-	char title[25];
-	char rank;
-	char Evaluation;
+	char Author[256];
+	int rank;			//レア度
+	int Evaluation;	//評価値
 };
-
+using Library_Tbl = array<bool, static_cast<size_t>(BookTitle::Max)>;
 class BookList
 {
 public:
@@ -30,12 +52,22 @@ public:
 		return s_Instance;
 	}
 
-	string GetArchive(int member);
-	void SetLibrary(string member);
-	int GetArchiveSize();
+	const string GetArchive(int member);
+	void SetLibrary(int num,bool flag);
+	const Library_Tbl GetLibrary(void);
+	const int GetLibraryIndex(string member);
+	const vector<string> GetAuthor(void);
+	const int GetArchiveSize(void);
+	const int GetLibrarySize(void);
+
+	void ChangeStatus(string author);
+	void DataSave(string title);
+	void DataLoad(string title);
 private:
 	BookList();
 	~BookList();
 	vector<string> BookArchive;
-	vector<string> BookLibrary;
+	vector<string> BookAuthorList;
+	Library_Tbl BookLibrary;
+	map<string, Book_Status>BookStatus;
 };

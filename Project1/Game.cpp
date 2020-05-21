@@ -1,5 +1,7 @@
 #include <string>
 #include <time.h>
+#include <Windows.h>
+
 #include "DxLib.h"
 
 #include "BaseScene.h"
@@ -105,6 +107,14 @@ void Game::Timer(const KeyCtl &controller)
 		{
 			date.hour += 1;
 			date.minute = 0;
+			if (date.hour >= 12)
+			{
+				date.daycycle = DayCycle::Night;
+			}
+			else
+			{
+				date.daycycle = DayCycle::Day;
+			}
 			if (date.day > 24)
 			{
 				date.month += 1;
@@ -171,15 +181,38 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	if (Key[KEY_INPUT_ESCAPE] & ~KeyOld[KEY_INPUT_ESCAPE])
 	{
 		lpSceneMng.SetEndFlag(true);
+		lpBookList.DataSave("BookArchive");
 		lpMapCtl.MapSave(false, WorldName);
-	}
-	if (lpEvent.CheckEvent())
+	}if (Key[KEY_INPUT_A] & ~KeyOld[KEY_INPUT_A])
 	{
-		TimeTransFlag = false;
+		lpBookList.DataLoad("BookArchive");
+		lpMapCtl.MapLoad("New World.map");
 	}
-	if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
+	if (date.daycycle == DayCycle::Day)
 	{
-		lpEvent.PlayEvent(EVENT::Donation);
+		if (lpEvent.CheckEvent())
+		{
+			TimeTransFlag = false;
+		}
+
+		if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
+		{
+			lpEvent.PlayEvent(EVENT::Donation);
+		}
+
+		if (Key[KEY_INPUT_W] & ~KeyOld[KEY_INPUT_W])
+		{
+			lpEvent.PlayEvent(EVENT::Debut);
+		}
+
+		if (lpEvent.GetEvent().id == EVENT::Raid && lpEvent.GetEvent().flag == true)
+		{
+			lpEvent.SetEvent(false, EVENT::Raid);
+		}
+	}
+	else
+	{
+
 	}
 	if (lpEvent.CheckEvent() == true)
 	{
@@ -219,13 +252,12 @@ void Game::Draw()
 		}
 	}
 	//DrawFormatString(0, 0, 0xffffff, "%d年目 %2d月%2d日\n%2d時%2d分", date.year, date.month, date.day, date.hour, date.minute);
-	//DrawFormatString(0,0,lpBookList.BookDataLoad())
-	for (int num = 0; num < 3; num++)
+	for (int num = 0; num < (int)BookTitle::Max; num++)
 	{
-		DrawGraph(300 + (ImageSize["icon"].x * num), 0, lpImageMng.GetID("img/icon.png", VECTOR2(30, 30), VECTOR2(3, 1))[num], true);
-	};
+		DrawFormatString(0, 30 * num, 0xffffff, "%d", lpBookList.GetLibrary()[num]);
+	}
 	DrawFormatString(0, 680, 0xffffff, "Mpos.x%d Mpos.y%d", Mpos.x, Mpos.y);
-	DrawFormatString(0, 700, 0xffffff, "ID:%d", static_cast<int>(id));
+	DrawFormatString(80, 0, 0xffffff, "ID:%d", static_cast<int>(sizeof(Date)));
 	DrawFormatString(0, 760, 0xffffff, "Nature: %d", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 50)).BuildFlag);
 	// 裏画面の内容を表画面にコピーする（描画の確定）.
 	ScreenFlip();
@@ -253,6 +285,14 @@ void Game::Phase(DayCycle cycle)
 		}
 		break;
 	case DayCycle::Night:
+		if (rand() % 40 == 0)
+		{
+
+		}
+		if (rand() % 60 == 0)
+		{
+			//友好度上昇イベント
+		}
 		break;
 	default:
 		break;

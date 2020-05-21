@@ -3,11 +3,13 @@
 #include "VECTOR2.h"
 #include "ImageMng.h"
 #include "MAP_ID.h"
+#include "BookList.h"
 #include "Game.h"
 #include "MapCtl.h"
 struct  DataHeader
 {
-	int WorldName;
+	char WorldName;
+	Library_Tbl BookLibrary;
 	int Frame;
 	Date date;
 	int sizeX;
@@ -19,6 +21,7 @@ bool MapCtl::MapSave(bool first, string worldname)
 	DataHeader expData
 	{
 		atoi(worldname.c_str()),
+		lpBookList.GetLibrary(),
 		0,
 		date,
 		mapSize.x,
@@ -26,7 +29,7 @@ bool MapCtl::MapSave(bool first, string worldname)
 	};
 	struct stat statBuf;
 	FILE *file;
-	fopen_s(&file, WorldName.c_str(), "w");
+	fopen_s(&file, WorldName.c_str(), "wb");
 	fwrite(&expData, sizeof(expData), 1, file);
 	fwrite(&MapDataBace[0], sizeof(Map_ID)*MapDataBace.size(), 1, file);
 	fclose(file);
@@ -44,6 +47,10 @@ bool MapCtl::MapLoad(string worldname)
 	MapDataBace.resize(expData.sizeX * expData.sizeY);
 	fread(&MapDataBace[0], sizeof(Map_ID), MapDataBace.size(), file);
 	this->WorldName = worldname;
+	for (int num = 0;num < expData.BookLibrary.size();num++)
+	{
+		lpBookList.SetLibrary(num,expData.BookLibrary[num]);
+	}
 	fclose(file);
 	return true;
 }

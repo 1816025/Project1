@@ -26,15 +26,32 @@ void Event::UpDate(const KeyCtl &controller)
 	auto ClickOld = Click;
 	VECTOR2 Mpos = { 0,0 };
 	GetMousePoint(&Mpos.x, &Mpos.y);
-	for (int num = 0; num < Candidate.size(); num++)
+	switch (data.id)
 	{
-		if (Click&(ClickOld) 
-			&& Mpos > VECTOR2(OffSetX / 1.5 + (OffSetX / 1.5)*num, ScreenSize.y / 2 + OffSetY / 2)
-			&&Mpos < VECTOR2((OffSetX / 1.5) + (OffSetX / 1.5)*num, ScreenSize.y / 2 + OffSetY / 2) + ImageSize["icon"])
+	case EVENT::Donation:
+		for (int num = 0; num < Candidate.size(); num++)
 		{
-			SetEvent(false, EVENT::Donation);
-			lpBookList.SetLibrary(Candidate[num]);
+			if (Click&(ClickOld)
+				&& Mpos > VECTOR2(OffSetX / 1.5 + (OffSetX / 1.5)*num, ScreenSize.y / 2 + OffSetY / 2)
+				&& Mpos < VECTOR2((OffSetX / 1.5) + (OffSetX / 1.5)*num, ScreenSize.y / 2 + OffSetY / 2) + ImageSize["icon"])
+			{
+				SetEvent(false, EVENT::Donation);
+				//Œ»ÝŠ—L‚µ‚Ä‚¢‚È‚¯‚ê‚ÎŠl“¾‚Å‚«‚é
+				if (lpBookList.GetLibrary()[lpBookList.GetLibraryIndex(Candidate[num])] == false)
+				{
+					lpBookList.SetLibrary(lpBookList.GetLibraryIndex(Candidate[num]),true);
+				}
+			}
 		}
+		break;
+	case EVENT::Debut:
+		SetEvent(false, EVENT::Debut);
+		lpBookList.ChangeStatus(lpBookList.GetAuthor()[rand() % lpBookList.GetAuthor().size()]);
+		break;
+	case EVENT::Raid:
+		break;
+	default:
+		break;
 	}
 }
 
