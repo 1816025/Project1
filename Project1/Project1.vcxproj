@@ -139,6 +139,7 @@
     <ClCompile Include="MAP_ID.cpp" />
     <ClCompile Include="Noise.cpp" />
     <ClCompile Include="Pose.cpp" />
+    <ClCompile Include="Raid.cpp" />
     <ClCompile Include="SceneMng.cpp" />
     <ClCompile Include="SoundMng.cpp" />
     <ClCompile Include="TitleScene.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="MAP_ID.h" />
     <ClInclude Include="Noise.h" />
     <ClInclude Include="Pose.h" />
+    <ClInclude Include="Raid.h" />
     <ClInclude Include="SceneMng.h" />
     <ClInclude Include="SoundMng.h" />
     <ClInclude Include="TitleScene.h" />

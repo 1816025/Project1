@@ -4,9 +4,10 @@
 #include "KeyCtl.h"
 #include "MAP_ID.h"
 #include "MapCtl.h"
-#include "ImageMng.h"
-#include "BookList.h"
 #include "Game.h"
+#include "ImageMng.h"
+#include "Raid.h"
+#include "BookList.h"
 #include "Event.h"
 
 Event::Event()
@@ -49,6 +50,7 @@ void Event::UpDate(const KeyCtl &controller)
 		lpBookList.ChangeStatus(lpBookList.GetAuthor()[rand() % lpBookList.GetAuthor().size()]);
 		break;
 	case EVENT::Raid:
+		lpRaid.UpDate();
 		break;
 	default:
 		break;

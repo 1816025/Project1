@@ -22,19 +22,18 @@ BookList::BookList()
 			} while (FindNextFile(handle, &fd));
 		}
 	}
-	for (auto n : BookLibrary)
-	{
-		BookLibrary[n] = false;
-	}
 	for (auto n : BookArchive)
 	{
 		fopen_s(&fp, ("data/BookArchive/List/" + n + ".dat").c_str(), "rb");
 		fread(&tmp_status, sizeof(tmp_status), 1, fp);
 		BookStatus[n] = tmp_status;
+		BookRankList.emplace_back(BookStatus[n].rank);
 		fclose(fp);
 	}
-	//			BookLibrary.emplace_back(false);
-
+	for (auto n : BookLibrary)
+	{
+		BookLibrary[n] = false;
+	}
 }
 
 const string BookList::GetArchive(int member)
@@ -83,6 +82,12 @@ const int BookList::GetLibrarySize()
 	return BookLibrary.size();
 }
 
+void BookList::SetLooting(string title,bool flag)
+{
+	Library_Tbl::iterator itr;
+	BookLibrary[std::distance(BookLibrary.begin(), itr)] = flag;
+}
+
 void BookList::ChangeStatus(string author)
 {
 	auto itr = BookAuthorList.begin();
@@ -98,16 +103,16 @@ void BookList::ChangeStatus(string author)
 			switch ((BookRank)(rand() % static_cast<size_t>(BookRank::Max)))
 			{
 			case BookRank::Common:
-				if (BookStatus[BookArchive[distance(BookAuthorList.begin(),itr)]].rank <= static_cast<int>(BookRank::Common))
+				if (BookStatus[BookArchive[distance(BookAuthorList.begin(),itr)]].rank <= BookRank::Common)
 				{
-					BookStatus[BookArchive[distance(BookAuthorList.begin(), itr)]].rank = static_cast<int>(BookRank::Common);
+					BookStatus[BookArchive[distance(BookAuthorList.begin(), itr)]].rank = BookRank::Common;
 					BookStatus[BookArchive[distance(BookAuthorList.begin(), itr)]].Evaluation = 100;
 				}
 				break;
 			case BookRank::Rare:
-				if (BookStatus[BookArchive[distance(BookAuthorList.begin(), itr)]].rank <= static_cast<int>(BookRank::Rare))
+				if (BookStatus[BookArchive[distance(BookAuthorList.begin(), itr)]].rank <= BookRank::Rare)
 				{
-					BookStatus[BookArchive[distance(BookAuthorList.begin(), itr)]].rank = static_cast<int>(BookRank::Rare);
+					BookStatus[BookArchive[distance(BookAuthorList.begin(), itr)]].rank = BookRank::Rare;
 					BookStatus[BookArchive[distance(BookAuthorList.begin(), itr)]].Evaluation = 1000;
 				}
 				break;
@@ -121,15 +126,10 @@ void BookList::ChangeStatus(string author)
 
 void BookList::DataSave(string title)
 {
-	int tmp_size = 0;/*
-	for (int num = 0; num < BookLibrary.size(); num++)
-	{
-		tmp_size = tmp_size + BookLibrary[num].size();
-	}*/
 	if (title == "BookArchive")
 	{
 		fopen_s(&fp, ("data/BookArchive/" + title + ".dat").c_str(), "wb");
-		fwrite(&BookArchive, sizeof(tmp_size), 1,fp);
+		fwrite(&BookArchive, sizeof(BookArchive.size()), 1,fp);
 	}
 	else
 	{

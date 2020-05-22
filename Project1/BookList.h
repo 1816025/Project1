@@ -39,7 +39,7 @@ enum class BookRank
 struct Book_Status
 {
 	char Author[256];
-	int rank;			//レア度
+	BookRank rank;			//レア度
 	int Evaluation;	//評価値
 };
 using Library_Tbl = array<bool, static_cast<size_t>(BookTitle::Max)>;
@@ -60,6 +60,7 @@ public:
 	const int GetArchiveSize(void);
 	const int GetLibrarySize(void);
 
+	void SetLooting(string title, bool flag);
 	void ChangeStatus(string author);
 	void DataSave(string title);
 	void DataLoad(string title);
@@ -68,6 +69,7 @@ private:
 	~BookList();
 	vector<string> BookArchive;
 	vector<string> BookAuthorList;
+	vector<BookRank>BookRankList;
 	Library_Tbl BookLibrary;
 	map<string, Book_Status>BookStatus;
 };

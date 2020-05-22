@@ -99,7 +99,7 @@ void Game::Timer(const KeyCtl &controller)
 	Frame++;
 
 	date.daycycle = static_cast<DayCycle>(date.hour / 24 % static_cast<int>(DayCycle::Max));
-	OpenFlag = (date.day % 4 != 0 ? true : false);
+	//OpenFlag = (date.day % 4 != 0 ? true : false);
 	if (Frame%(60) == 0)
 	{
 		date.minute += 1;
@@ -156,10 +156,6 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	}
 
 	//施設の設置
-	if (Click&(ClickOld)&& SetObjectFlag == true)
-	{
-		lpMapCtl.SetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY), id);
-	}
 
 	for (int num = 0; num < 2; num++)
 	{
@@ -188,32 +184,49 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 		lpBookList.DataLoad("BookArchive");
 		lpMapCtl.MapLoad("New World.map");
 	}
-	if (date.daycycle == DayCycle::Day)
+
+	if (OpenFlag == true)
 	{
-		if (lpEvent.CheckEvent())
+		/*開館時のイベント(昼)*/
+		if (date.daycycle == DayCycle::Day)
 		{
-			TimeTransFlag = false;
-		}
+			if (lpEvent.CheckEvent())
+			{
+				TimeTransFlag = false;
+			}
 
-		if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
-		{
-			lpEvent.PlayEvent(EVENT::Donation);
-		}
+			if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
+			{
+				lpEvent.PlayEvent(EVENT::Donation);
+			}
 
-		if (Key[KEY_INPUT_W] & ~KeyOld[KEY_INPUT_W])
-		{
-			lpEvent.PlayEvent(EVENT::Debut);
-		}
+			if (Key[KEY_INPUT_W] & ~KeyOld[KEY_INPUT_W])
+			{
+				lpEvent.PlayEvent(EVENT::Debut);
+			}
 
-		if (lpEvent.GetEvent().id == EVENT::Raid && lpEvent.GetEvent().flag == true)
+			if (lpEvent.GetEvent().id == EVENT::Raid && lpEvent.GetEvent().flag == true)
+			{
+				lpEvent.SetEvent(false, EVENT::Raid);
+			}
+		} 
+		/*開館時のイベント(昼)*/
+		else
 		{
-			lpEvent.SetEvent(false, EVENT::Raid);
+			lpEvent.PlayEvent(EVENT::Raid);
 		}
 	}
 	else
 	{
-
+		if (date.daycycle == DayCycle::Day)
+		{
+			if (Click&(ClickOld))
+			{
+				lpMapCtl.SetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY), id);
+			}
+		}
 	}
+
 	if (lpEvent.CheckEvent() == true)
 	{
 		lpEvent.UpDate(controller);
