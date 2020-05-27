@@ -17,6 +17,7 @@
 #include "Noise.h"				//ノイズを生成する
 #include "MAP_ID.h"
 #include "MapCtl.h"				//マップの操作
+#include "Achievement.h"		//実績
 #include "Event.h"				//イベント
 
 #include "Game.h"				//自分
@@ -69,18 +70,24 @@ int Game::Init()
 	TimeTransFlag = true; //trueでFrame加算
 	SetObjectFlag = false;
 	CntSpeed = 1;
-	Debug = false;
+	BookCnt = 100;
+	Pose = false;
+	WorldRank = 0;
 	srand(time(NULL));
 	auto ImageSize = [=](string name,VECTOR2 divSize,VECTOR2 divCnt)
 	{
 		GetGraphSize(lpImageMng.GetID("img/" + name + ".png", divSize, divCnt)[1], &this->ImageSize[name].x,&this->ImageSize[name].y);
 	};
 	ImageSize("icon", VECTOR2(30, 30), VECTOR2(3, 1));
+	GetGraphSize(lpImageMng.GetID("img/Bookicon.png")[0], &this->ImageSize["Bookicon"].x, &this->ImageSize["Bookicon"].y);
 	ImageSize("TAB", VECTOR2(150, 70), VECTOR2(2, 1));
 	id = Map_ID::BOOK_SHELF;
 	lpMapCtl.SetUp(VECTOR2(400, 400), VECTOR2(16, 16), VECTOR2(300, 100));
-	//lpSoundMng.GetID("sounddata/wave.mp3");
-	//lpSoundMng.PlaySound("sounddata/wave.mp3", PlayType::Loop);
+	lpSoundMng.GetID("sounddata/Library.mp3");
+	lpSoundMng.ChangeVol(25, "sounddata/Library.mp3");
+	lpSoundMng.PlaySound("sounddata/Library.mp3", PlayType::Loop);
+	fontHandle["font01"] = CreateFontToHandle("font01", 24, 9, DX_FONTTYPE_EDGE,-1,2);
+	fontHandle["font02"] = CreateFontToHandle("font02", 35, 9, DX_FONTTYPE_EDGE,-1,2,2);
 	lpBookList.GetInstance();
 	return 0;
 }
@@ -107,13 +114,22 @@ void Game::Timer(const KeyCtl &controller)
 		{
 			date.hour += 1;
 			date.minute = 0;
-			if (date.hour >= 12)
+			//if (date.hour >= 12)
+			//{
+			date.daycycle = DayCycle::Night;
+			//}
+			//else
+			//{
+			//	date.daycycle = DayCycle::Day;
+			//}
+			if (date.hour < 24)
 			{
-				date.daycycle = DayCycle::Night;
-			}
-			else
-			{
-				date.daycycle = DayCycle::Day;
+				date.day += 1;
+				date.hour = 0;
+				for (int index = 0; index < lpAchievement.GetAchievement().size(); index++)
+				{
+					lpAchievement.UpDate(lpAchievement.GetAchievement()[index], { false,date,WorldRank,BookCnt,CollectCnt });
+				}
 			}
 			if (date.day > 24)
 			{
@@ -149,7 +165,7 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	if (Key[KEY_INPUT_LCONTROL] & (~KeyOld[KEY_INPUT_LCONTROL]))
 	{
 		id = (Map_ID)(id + 1);
-		if (id >= Map_ID::CHAIR)
+		if (id > Map_ID::DESK)
 		{
 			id = Map_ID::BOOK_SHELF;
 		}
@@ -173,7 +189,17 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 			}
 		}
 	}
-
+	if (Click&(ClickOld) && Mpos > VECTOR2(10, 450) && Mpos < VECTOR2(10 + ImageSize["Bookicon"].x, 450 + ImageSize["Bookicon"].y))
+	{
+		if (Pose == false)
+		{
+			Pose = true;
+		}
+		else
+		{
+			Pose = false;
+		}
+	}
 	if (Key[KEY_INPUT_ESCAPE] & ~KeyOld[KEY_INPUT_ESCAPE])
 	{
 		lpSceneMng.SetEndFlag(true);
@@ -183,6 +209,11 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	{
 		lpBookList.DataLoad("BookArchive");
 		lpMapCtl.MapLoad("New World.map");
+	}
+	if (Key[KEY_INPUT_D] & ~KeyOld[KEY_INPUT_D])
+	{
+		date.daycycle = DayCycle::Night;
+		lpEvent.PlayEvent(EVENT::Raid);
 	}
 
 	if (OpenFlag == true)
@@ -210,7 +241,6 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 				lpEvent.SetEvent(false, EVENT::Raid);
 			}
 		} 
-		/*開館時のイベント(昼)*/
 		else
 		{
 			lpEvent.PlayEvent(EVENT::Raid);
@@ -220,9 +250,12 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	{
 		if (date.daycycle == DayCycle::Day)
 		{
-			if (Click&(ClickOld))
+			if (Click&(ClickOld) )
 			{
-				lpMapCtl.SetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY), id);
+				if (lpMapCtl.GetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY)) == Map_ID::NON || id == Map_ID::NON)
+				{
+					lpMapCtl.SetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY), id);
+				}
 			}
 		}
 	}
@@ -243,10 +276,6 @@ void Game::Draw()
 	// 画面を初期化(真っ黒にする)
 	ClearDrawScreen();
 	DrawGraph(0, 0, lpImageMng.GetID("img/books.png")[0], false);
-	if (Debug)
-	{
-		DrawFormatString(600, 0, 0xffffff, "%d", Frame);
-	}
 
 	if (lpEvent.CheckEvent() == true)
 	{
@@ -257,21 +286,57 @@ void Game::Draw()
 		lpMapCtl.Draw();
 		for (int y = 0; y <= DisplaySizeY / ChipSize; y++)
 		{
-			DrawLine(OffSetX, OffSetY + (ChipSize*y), OffSetX + (ChipSize * (DisplaySizeY / ChipSize)), OffSetY + (ChipSize*y), 0x666666);
+			DrawLine(OffSetX, OffSetY + (ChipSize*y), OffSetX + (ChipSize * (DisplaySizeY / ChipSize)), OffSetY + (ChipSize*y), 0x8b8781);
 		}
 		for (int x = 0; x <= DisplaySizeX / ChipSize; x++)
 		{
-			DrawLine(OffSetX + (ChipSize*x), OffSetY, OffSetX + (ChipSize*x), OffSetY + (ChipSize*(DisplaySizeX / ChipSize)), 0x666666);
+			DrawLine(OffSetX + (ChipSize*x), OffSetY, OffSetX + (ChipSize*x), OffSetY + (ChipSize*(DisplaySizeX / ChipSize)), 0x8b8781);
+		}
+		//DrawGraph(OffSetX, OffSetY, lpImageMng.GetID( "img/Redhood.png",VECTOR2(16, 16), VECTOR2(3, 4))[1], true);
+	}
+	if (Pose)
+	{
+		DrawGraph(0, 0, lpImageMng.GetID("img/books.png")[0], false);
+		DrawBox(ScreenSize.x / 2 - 50, 75, ScreenSize.x - 100, ScreenSize.y -100, 0x00, true);
+		DrawBox(100, ScreenSize.y -300,300, ScreenSize.y - 100, 0x00, true);
+		DrawFormatString(125, 320, 0xffffff, "BookCnt: %d冊", BookCnt);
+		DrawFormatString(125, 360, 0xffffff, "LibraryRank: ");
+		DrawFormatStringToHandle(490, 30, 0x00ffff, fontHandle["font02"], "実績");
+
+		switch (WorldRank)
+		{
+		case 0:
+			DrawFormatStringToHandle(260, 350, 0xffffff, fontHandle["font01"], "D");
+			break;
+		case 1:
+			DrawFormatStringToHandle(260, 350, 0xfffff8, fontHandle["font01"], "LibraryRank: C");
+			break;
+		case 2:
+			DrawFormatStringToHandle(260, 350, 0xfffff0, fontHandle["font01"], "LibraryRank: B");
+			break;
+		case 3:
+			DrawFormatStringToHandle(260, 350, 0xffff8f, fontHandle["font01"], "LibraryRank: A");
+			break;
+		case 4:
+			DrawFormatStringToHandle(260, 350, 0xffff80, fontHandle["font01"], "LibraryRank: S");
+			break;
+		case 5:
+			DrawFormatStringToHandle(260, 350, 0xffff00, fontHandle["font01"], "LibraryRank: SS");
+			break;
+		default:
+			break;
+		}
+		for (int num = 0;num< lpAchievement.GetAchievement().size(); num++)
+		{
+			DrawFormatString(400, 100 + 20*num, 0xffffff,lpAchievement.GetAchievement()[num].c_str());
+			DrawFormatString(600, 100 + 20*num, 0xffffff, (lpAchievement.GetAchievementData(lpAchievement.GetAchievement()[num]).flag == true ? "達成済み" : "未達成"));
 		}
 	}
-	//DrawFormatString(0, 0, 0xffffff, "%d年目 %2d月%2d日\n%2d時%2d分", date.year, date.month, date.day, date.hour, date.minute);
-	for (int num = 0; num < (int)BookTitle::Max; num++)
-	{
-		DrawFormatString(0, 30 * num, 0xffffff, "%d", lpBookList.GetLibrary()[num]);
-	}
+	DrawFormatStringToHandle(0, 0, 0xffffff, fontHandle["font01"], "%d年目 %2d月%2d日\n%2d時%2d分", date.year, date.month, date.day, date.hour, date.minute);
+	
 	DrawFormatString(0, 680, 0xffffff, "Mpos.x%d Mpos.y%d", Mpos.x, Mpos.y);
-	DrawFormatString(80, 0, 0xffffff, "ID:%d", static_cast<int>(sizeof(Date)));
 	DrawFormatString(0, 760, 0xffffff, "Nature: %d", lpMapCtl.GetPanelStatus(VECTOR2(Mpos.x - 100, Mpos.y - 50)).BuildFlag);
+	DrawGraph(10, 450, lpImageMng.GetID("img/Bookicon.png")[0], true);
 	// 裏画面の内容を表画面にコピーする（描画の確定）.
 	ScreenFlip();
 }
@@ -283,14 +348,15 @@ void Game::Phase(DayCycle cycle)
 	case DayCycle::Day:
 		if (OpenFlag == true)
 		{
-			SetObjectFlag = false;/*
+			SetObjectFlag = false;
 			if(rand()%30==0)
 			{
+				CollectCnt++;
 				lpEvent.PlayEvent(EVENT::Donation);
 			}if(rand()%10==0)
 			{
 				lpEvent.PlayEvent(EVENT::Debut);
-			}*/
+			}
 		}
 		else
 		{

@@ -37,7 +37,7 @@ public:
 	const VEC_INT& GetID(std::string f_name);		// SEÊÝÄÞÙ‚Ì“üŽè
 	const int& PlaySound(string f_name,PlayType type);
 	const int& StopSound(string f_name);
-	const int& ChangeVol(string f_name);
+	const int& ChangeVol(int vol,string f_name);
 
 private:
 	map<string, VEC_INT> SoundData;

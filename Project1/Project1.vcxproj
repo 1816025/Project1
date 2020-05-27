@@ -128,6 +128,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Achievement.cpp" />
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="BookList.cpp" />
     <ClCompile Include="Event.cpp" />
@@ -138,6 +139,7 @@
     <ClCompile Include="MapCtl.cpp" />
     <ClCompile Include="MAP_ID.cpp" />
     <ClCompile Include="Noise.cpp" />
+    <ClCompile Include="OverLoad.cpp" />
     <ClCompile Include="Pose.cpp" />
     <ClCompile Include="Raid.cpp" />
     <ClCompile Include="SceneMng.cpp" />
@@ -148,6 +150,7 @@
     <ClCompile Include="WorldSelect.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Achievement.h" />
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="BookList.h" />
     <ClInclude Include="Event.h" />
@@ -157,6 +160,7 @@
     <ClInclude Include="MapCtl.h" />
     <ClInclude Include="MAP_ID.h" />
     <ClInclude Include="Noise.h" />
+    <ClInclude Include="OverLoad.h" />
     <ClInclude Include="Pose.h" />
     <ClInclude Include="Raid.h" />
     <ClInclude Include="SceneMng.h" />

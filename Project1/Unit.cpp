@@ -1,3 +1,4 @@
+#include "OverLoad.h"
 #include "Unit.h"
 
 Unit::Unit()
@@ -27,10 +28,19 @@ const vector<GroupParameter> Unit::GetUnitList()
 	return UnitList;
 }
 
+const GroupParameter Unit::GetUnitList(int index)
+{
+	return UnitList[index];
+}
+
 const int Unit::GetUnitStatus(VECTOR2 pos)
 {
 	auto itr = UnitList.begin();
 	itr = find(itr, UnitList.end(), pos);
+	if (itr == UnitList.end())
+	{
+		return false;
+	}
 	return distance(UnitList.begin(),itr);
 }
 
@@ -74,4 +84,5 @@ void Unit::PopPhase(GroupParameter index)
 {
 	UnitList.emplace_back(index);
 }
+
 

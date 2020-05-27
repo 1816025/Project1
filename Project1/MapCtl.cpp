@@ -81,6 +81,17 @@ bool MapCtl::SetMapData(const VECTOR2 & pos, Map_ID id)
 		return false;
 	}
 	MapData[selPos.y][selPos.x] = id;
+	if (id == Map_ID::DESK)
+	{
+		for (int num = 0; num < 3; num++)
+		{
+			if (selPos.y - 1 >= 0)
+			{
+				MapData[selPos.y - 1][selPos.x + num] = id + (num + 3);
+				MapData[selPos.y][selPos.x + num] = id + num;
+			}
+		}
+	}
 	return true;
 }
 
@@ -126,7 +137,7 @@ void MapCtl::Draw(void)
 		{
 			Map_ID id = MapData[y][x];
 
-			DrawGraph(drawOffset.x + chipsize.x*x, drawOffset.y + chipsize.y*y, lpImageMng.GetID("img/panel.png", VECTOR2(16, 16), VECTOR2(7, 2))[static_cast<int>(id)], false);
+			DrawGraph(drawOffset.x + chipsize.x*x, drawOffset.y + chipsize.y*y - 16, lpImageMng.GetID("img/panel.png", VECTOR2(16, 32), VECTOR2(11, 1))[static_cast<int>(id)], true);
 		}
 	}
 }

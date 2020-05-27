@@ -40,12 +40,15 @@ public:
 	void UpDate(void);
 	void SetPos(VECTOR2 pos, int index);
 	VECTOR2 GetPos(int index);
-	const vector<GroupParameter> GetUnitList();
+	const vector<GroupParameter> GetUnitList();	
+	const GroupParameter GetUnitList(int index);
+
 	const int GetUnitStatus(VECTOR2 pos);	//その座標に存在するユニットがどのような存在かを返す
 
 	void BattlePhase(int index, int enemy_index);		//ユニットが出会うと呼ばれる
 	void EndPhase(int index, int enemy_index);			//勝敗が決まると呼ばれる
 	void PopPhase(GroupParameter param);			    //勝敗が決まると呼ばれる
+
 private:
 	Unit();
 	~Unit();

@@ -24,13 +24,21 @@ const KeyArray & KeyCtl::GetCtl(KEY_TYPE type) const
 	return data;
 }
 
-const bool KeyCtl::GetClick(int mousetype, KEY_TYPE type)
+const bool& KeyCtl::GetClick(int mousetype, KEY_TYPE type)
 {
-	if (type == OLD)
+	if (GetMouseInput() == MOUSE_INPUT_LEFT)
 	{
-		return Click.old;
+		if (!Click.now)
+		{
+			Click.now = true;
+
+		}
 	}
-	return Click.now & mousetype;
+	else
+	{
+		Click.now = false;
+	}
+	return Click.now ;
 }
 
 const int &KeyCtl::CheckWheel()const

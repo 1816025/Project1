@@ -29,7 +29,7 @@ const int & SoundMng::StopSound(string f_name)
 	}
 }
 
-const int & SoundMng::ChangeVol(string f_name)
+const int & SoundMng::ChangeVol(int vol,string f_name)
 {
-	return 0;
+	return ChangeVolumeSoundMem(255*vol/100,SoundData[f_name][0]);
 }

@@ -42,10 +42,14 @@ private:
 	int Frame;
 	int CntSpeed;
 	int seed;
+	int BookCnt;
+	int WorldRank;
+	int CollectCnt;
 	Date date;
-	bool Debug;
+	bool Pose;
 	string WorldName;
 	Map_ID id;
 	map<string, VECTOR2> ImageSize;
+	map<string, int>fontHandle;
 };
 

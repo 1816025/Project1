@@ -4,9 +4,15 @@ enum class Map_ID
 {
 	BOOK_SHELF,
 	COUNTER,
-	DESK,
-	CHAIR,
+	CORRIDOR,
 	NON,
+	CHAIR,
+	DESK,
+	DESK2,
+	DESK3,
+	DESK4,
+	DESK5,
+	DESK6,
 	MAX
 };
 
