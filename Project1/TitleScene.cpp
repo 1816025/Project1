@@ -23,12 +23,12 @@ unique_base TitleScene::UpDate(unique_base own, const KeyCtl & controller)
 	auto ClickOld = Click;
 	VECTOR2 Mpos = VECTOR2(0, 0);
 	GetMousePoint(&Mpos.x, &Mpos.y);
-	if ((Click&(ClickOld)) && (Mpos > start.NewWorld&&Mpos < start.NewWorld + VECTOR2{ 400,80 }))
+	if ((Click&(~ClickOld)) && (Mpos > start.NewWorld&&Mpos < start.NewWorld + VECTOR2{ 400,80 }))
 	{
 		return std::make_unique<Game>();
 	}
 	
-	if ((Click&(ClickOld)) && (Mpos > start.Continue&&Mpos < start.Continue + VECTOR2{ 400,80 }))
+	if ((Click&(~ClickOld)) && (Mpos > start.Continue&&Mpos < start.Continue + VECTOR2{ 400,80 }))
 	{
 		return std::make_unique<WorldSelect>();
 	}

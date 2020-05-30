@@ -132,6 +132,7 @@
     <ClCompile Include="BaseScene.cpp" />
     <ClCompile Include="BookList.cpp" />
     <ClCompile Include="Event.cpp" />
+    <ClCompile Include="Favorability.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="ImageMng.cpp" />
     <ClCompile Include="KeyCtl.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="BaseScene.h" />
     <ClInclude Include="BookList.h" />
     <ClInclude Include="Event.h" />
+    <ClInclude Include="Favorability.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="ImageMng.h" />
     <ClInclude Include="KeyCtl.h" />

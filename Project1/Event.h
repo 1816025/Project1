@@ -7,6 +7,7 @@ enum class EVENT
 {
 	Donation,
 	Debut,
+	Favorability,
 	Raid,
 	Max
 };

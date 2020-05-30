@@ -1,6 +1,7 @@
-#include <algorithm>
-#include <Windows.h>
+//#include <algorithm>
+//#include <Windows.h>
 #include "DxLib.h"
+#include "OverLoad.h"
 #include "Event.h"
 #include "BookList.h"
 
@@ -67,6 +68,19 @@ void BookList::SetLibrary(int num,bool flag)
 	 return BookAuthorList;
  }
 
+ const vector<string> BookList::GetFavorabilityList(bool flag)
+ {
+	 vector<string> FavorabilityList;
+	 for (auto n : BookArchive)
+	 {
+		 if (BookStatus[n].Favorability == flag)
+		 {
+			 FavorabilityList.emplace_back(n);
+		 }
+	 }
+	 return  FavorabilityList;
+ }
+
  const Library_Tbl BookList::GetLibrary()
  {
 	 return BookLibrary;
@@ -80,6 +94,16 @@ const int BookList::GetArchiveSize()
 const int BookList::GetLibrarySize()
 {
 	return BookLibrary.size();
+}
+
+const int BookList::GetFriendshipValue(int index)
+{
+	return FriendshipValue[index];
+}
+
+const int BookList::SetFriendshipValue(int index,int data)
+{
+	return FriendshipValue[index] = data;
 }
 
 void BookList::SetLooting(string title,bool flag)
@@ -130,10 +154,6 @@ void BookList::DataSave(string title)
 	{
 		fopen_s(&fp, ("data/BookArchive/" + title + ".dat").c_str(), "wb");
 		fwrite(&BookArchive, sizeof(BookArchive.size()), 1,fp);
-	}
-	else
-	{
-
 	}
 	fclose(fp);
 }

@@ -29,6 +29,13 @@ const VEC_INT & ImageMng::GetID(string f_name, VECTOR2 divSize, VECTOR2 divCnt)
 	return imgMap[f_name];
 }
 
+const VECTOR2 ImageMng::GetImageSize(string f_name)
+{
+	auto vec = VECTOR2(0,0);
+	GetGraphSize(imgMap[f_name][0], &vec.x,&vec.y);
+	return vec;
+}
+
 ImageMng::ImageMng()
 {
 }

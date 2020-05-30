@@ -10,6 +10,11 @@ bool operator==(const GroupParameter & a, const VECTOR2 & b)
 	return (a.pos == b);
 }
 
+bool operator==(const Book_Status & a, const bool & b)
+{
+	return (a.Favorability == b);
+}
+
 bool operator>=(const AchievementStatus & a, const AchievementStatus & b)
 {
 	return (a.flag >= b.flag && a.date >= b.date && a.BookRank >= b.BookRank && a.BookCnt >= b.BookCnt &&a.CollectCnt >= b.CollectCnt);

@@ -8,7 +8,7 @@ bool KeyCtl::UpDate(void)
 
 
 	Click.old = Click.now;
-	Click.now = GetMouseInput();			//クリック情報の取得
+	Click.now = (GetMouseInput()&MOUSE_INPUT_LEFT);			//クリック情報の取得
 
 	wheel = GetMouseWheelRotVol() % 2;	//ﾎｲｰﾙ情報の取得
 
@@ -24,19 +24,11 @@ const KeyArray & KeyCtl::GetCtl(KEY_TYPE type) const
 	return data;
 }
 
-const bool& KeyCtl::GetClick(int mousetype, KEY_TYPE type)
+const bool& KeyCtl::GetClick(KEY_TYPE type) const
 {
-	if (GetMouseInput() == MOUSE_INPUT_LEFT)
+	if (type == OLD)
 	{
-		if (!Click.now)
-		{
-			Click.now = true;
-
-		}
-	}
-	else
-	{
-		Click.now = false;
+		return Click.old;
 	}
 	return Click.now ;
 }

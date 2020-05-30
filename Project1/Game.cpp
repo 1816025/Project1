@@ -114,15 +114,15 @@ void Game::Timer(const KeyCtl &controller)
 		{
 			date.hour += 1;
 			date.minute = 0;
-			//if (date.hour >= 12)
-			//{
+			if (date.hour >= 12)
+			{
 			date.daycycle = DayCycle::Night;
-			//}
-			//else
-			//{
-			//	date.daycycle = DayCycle::Day;
-			//}
-			if (date.hour < 24)
+			}
+			else
+			{
+				date.daycycle = DayCycle::Day;
+			}
+			if (date.hour > 24)
 			{
 				date.day += 1;
 				date.hour = 0;
@@ -149,8 +149,8 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 {
 	auto Key = controller.GetCtl(NOW);
 	auto KeyOld = controller.GetCtl(OLD);
-	auto Click = (GetMouseInput()&MOUSE_INPUT_LEFT);
-	auto ClickOld = Click;
+	auto Click = controller.GetClick(NOW);
+	auto ClickOld = controller.GetClick(OLD);
 
 
 	auto Mpos = VECTOR2(0, 0);
@@ -175,7 +175,7 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 
 	for (int num = 0; num < 2; num++)
 	{
-		if (Click&(ClickOld) && Mpos > VECTOR2(15 + (15 * num + ImageSize["TAB"].x*num), ScreenSize.y - ImageSize["TAB"].y) && Mpos < VECTOR2(ImageSize["TAB"].x + 15 + (15 * num + ImageSize["TAB"].x*num), ScreenSize.y))
+		if (Click&(~ClickOld) && Mpos > VECTOR2(15 + (15 * num + ImageSize["TAB"].x*num), ScreenSize.y - ImageSize["TAB"].y) && Mpos < VECTOR2(ImageSize["TAB"].x + 15 + (15 * num + ImageSize["TAB"].x*num), ScreenSize.y))
 		{
 			switch (num)
 			{
@@ -189,7 +189,7 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 			}
 		}
 	}
-	if (Click&(ClickOld) && Mpos > VECTOR2(10, 450) && Mpos < VECTOR2(10 + ImageSize["Bookicon"].x, 450 + ImageSize["Bookicon"].y))
+	if (Click&(~ClickOld) && Mpos > VECTOR2(10, 450) && Mpos < VECTOR2(10 + ImageSize["Bookicon"].x, 450 + ImageSize["Bookicon"].y))
 	{
 		if (Pose == false)
 		{
@@ -250,7 +250,7 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	{
 		if (date.daycycle == DayCycle::Day)
 		{
-			if (Click&(ClickOld) )
+			if (Click&(~ClickOld) )
 			{
 				if (lpMapCtl.GetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY)) == Map_ID::NON || id == Map_ID::NON)
 				{
@@ -283,6 +283,7 @@ void Game::Draw()
 	}
 	else
 	{
+		DrawGraph(OffSetX - 16, OffSetY - 32, lpImageMng.GetID("img/wall.png")[0], true);
 		lpMapCtl.Draw();
 		for (int y = 0; y <= DisplaySizeY / ChipSize; y++)
 		{
@@ -370,6 +371,7 @@ void Game::Phase(DayCycle cycle)
 		}
 		if (rand() % 60 == 0)
 		{
+			lpEvent.PlayEvent(EVENT::Favorability);
 			//友好度上昇イベント
 		}
 		break;

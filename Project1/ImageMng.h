@@ -30,6 +30,7 @@ public:
 
 	const VEC_INT& GetID(string f_name);			//рсь┌л▌Ф⌠╬
 	const VEC_INT& GetID(string f_name, VECTOR2 divSize, VECTOR2 divCnt);			//┴Ф▒°┌л∙╙┼└⌠г┌щ█·┌щ
+	const VECTOR2 GetImageSize(string f_name);
 
 private:
 	ImageMng();

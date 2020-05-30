@@ -21,7 +21,7 @@ class KeyCtl
 public:
 	bool UpDate(void);
 	const KeyArray& GetCtl(KEY_TYPE type)const;
-	const bool& GetClick(int mousetype, KEY_TYPE type);
+	const bool& GetClick(KEY_TYPE type)const;
 	const int &CheckWheel()const;
 private:
 	KeyArray data;

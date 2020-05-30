@@ -6,6 +6,8 @@
 #include "MapCtl.h"
 #include "Game.h"
 #include "ImageMng.h"
+#include "Unit.h"
+#include "Favorability.h"
 #include "Raid.h"
 #include "BookList.h"
 #include "Event.h"
@@ -51,6 +53,9 @@ void Event::UpDate(const KeyCtl &controller)
 		break;
 	case EVENT::Raid:
 		lpRaid.UpDate();
+	case EVENT::Favorability:
+		SetEvent(false, EVENT::Favorability);
+		lpFavorability.UpDate(rand()%lpBookList.GetFavorabilityList(true).size(),controller);
 		break;
 	default:
 		break;
@@ -59,12 +64,22 @@ void Event::UpDate(const KeyCtl &controller)
 
 void Event::Draw(void)
 {
-	for (int num = 0; num < Candidate.size(); num++)
+	if (GetEvent().id == EVENT::Debut)
 	{
-		DrawGraph(OffSetX/1.5 + (OffSetX/1.5)*num, ScreenSize.y/2 +OffSetY/2, lpImageMng.GetID("img/bookicon.png")[0], true);
-		DrawFormatString(OffSetX/2 + (OffSetX / 1.5)*num, ScreenSize.y / 2 - OffSetY / 1.5, 0xffffff, "%s", Candidate[num].c_str());
+		for (int num = 0; num < Candidate.size(); num++)
+		{
+			DrawGraph(OffSetX / 1.5 + (OffSetX / 1.5)*num, ScreenSize.y / 2 + OffSetY / 2, lpImageMng.GetID("img/bookicon.png")[0], true);
+			DrawFormatString(OffSetX / 2 + (OffSetX / 1.5)*num, ScreenSize.y / 2 - OffSetY / 1.5, 0xffffff, "%s", Candidate[num].c_str());
+		}
+		DrawFormatString(0, 0, 0xffffff, "%d\n%d\n%d", Candidate[0], Candidate[1], Candidate[2]);
 	}
-		DrawFormatString(0,0, 0xffffff, "%d\n%d\n%d", Candidate[0],Candidate[1],Candidate[2]);
+	if (GetEvent().id == EVENT::Favorability)
+	{
+		for (int num = 0; num < static_cast<int>(MISSION::MAX); num++)
+		{
+			DrawGraph(OffSetX / 1.5 + (OffSetX / 1.5)*num, ScreenSize.y / 2 + OffSetY / 2, lpImageMng.GetID("img/bookicon.png")[0], true);
+		}
+	}
 }
 
 void Event::PlayEvent(EVENT eventtype)

@@ -41,6 +41,7 @@ struct Book_Status
 	char Author[256];
 	BookRank rank;			//レア度
 	int Evaluation;	//評価値
+	bool Favorability;		//友好度上昇イベ対象かどうか
 };
 using Library_Tbl = array<bool, static_cast<size_t>(BookTitle::Max)>;
 class BookList
@@ -57,13 +58,18 @@ public:
 	const Library_Tbl GetLibrary(void);
 	const int GetLibraryIndex(string member);
 	const vector<string> GetAuthor(void);
+	const vector<string> GetFavorabilityList(bool flag);
 	const int GetArchiveSize(void);
 	const int GetLibrarySize(void);
+	const int GetFriendshipValue(int index);
+	const int SetFriendshipValue(int index,int data);
 
 	void SetLooting(string title, bool flag);
 	void ChangeStatus(string author);
 	void DataSave(string title);
 	void DataLoad(string title);
+
+	vector<int> FriendshipValue;
 private:
 	BookList();
 	~BookList();
