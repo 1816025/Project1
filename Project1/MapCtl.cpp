@@ -10,6 +10,7 @@ struct  DataHeader
 {
 	char WorldName;
 	Library_Tbl BookLibrary;
+	int BookCnt;
 	int Frame;
 	Date date;
 	int sizeX;
@@ -22,6 +23,7 @@ bool MapCtl::MapSave(bool first, string worldname)
 	{
 		atoi(worldname.c_str()),
 		lpBookList.GetLibrary(),
+		lpBookList.GetBookCnt(),
 		0,
 		date,
 		mapSize.x,
@@ -47,6 +49,7 @@ bool MapCtl::MapLoad(string worldname)
 	MapDataBace.resize(expData.sizeX * expData.sizeY);
 	fread(&MapDataBace[0], sizeof(Map_ID), MapDataBace.size(), file);
 	this->WorldName = worldname;
+	lpBookList.SetBookCnt(expData.BookCnt);
 	for (int num = 0;num < expData.BookLibrary.size();num++)
 	{
 		lpBookList.SetLibrary(num,expData.BookLibrary[num]);

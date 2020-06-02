@@ -19,11 +19,15 @@ using namespace std;
 enum class BookTitle
 {
 	Arthur,
-	HanselandGretel,
-	Alice,
-	Hameln,
+	JackAndBean,
 	Necronomicon,
+	Hameln,
+	HanselandGretel,
 	Humanskin,
+	TecBook1,
+	TecBook2,
+	RedHood,
+	Alice,
 	Max
 };
 
@@ -54,7 +58,6 @@ public:
 	}
 
 	const string GetArchive(int member);
-	void SetLibrary(int num,bool flag);
 	const Library_Tbl GetLibrary(void);
 	const int GetLibraryIndex(string member);
 	const vector<string> GetAuthor(void);
@@ -62,7 +65,14 @@ public:
 	const int GetArchiveSize(void);
 	const int GetLibrarySize(void);
 	const int GetFriendshipValue(int index);
+	const int GetBookCnt(void);
+	const int GetLibraryScore(void);
+	const int GetLibraryRank(void);
+
+	void SetLibrary(int num,bool flag);
 	const int SetFriendshipValue(int index,int data);
+	void SetBookCnt(int count);
+	void SetLibraryScore(void);
 
 	void SetLooting(string title, bool flag);
 	void ChangeStatus(string author);
@@ -73,9 +83,14 @@ public:
 private:
 	BookList();
 	~BookList();
+
 	vector<string> BookArchive;
 	vector<string> BookAuthorList;
 	vector<BookRank>BookRankList;
 	Library_Tbl BookLibrary;
 	map<string, Book_Status>BookStatus;
+
+	int BookCnt;
+	int LibraryRank;
+	int LibraryScore;
 };

@@ -71,11 +71,11 @@ void BookList::SetLibrary(int num,bool flag)
  const vector<string> BookList::GetFavorabilityList(bool flag)
  {
 	 vector<string> FavorabilityList;
-	 for (auto n : BookArchive)
+	 for (int n = 0; n<BookLibrary.size();n++)
 	 {
-		 if (BookStatus[n].Favorability == flag)
+		 if (BookStatus[lpBookList.GetArchive(n)].Favorability == flag)
 		 {
-			 FavorabilityList.emplace_back(n);
+			 FavorabilityList.emplace_back(lpBookList.GetArchive(n));
 		 }
 	 }
 	 return  FavorabilityList;
@@ -101,9 +101,43 @@ const int BookList::GetFriendshipValue(int index)
 	return FriendshipValue[index];
 }
 
+const int BookList::GetBookCnt(void)
+{
+	return BookCnt;
+}
+
+const int BookList::GetLibraryScore(void)
+{
+	return LibraryScore;
+}
+
+const int BookList::GetLibraryRank(void)
+{
+	return LibraryRank;
+}
+
 const int BookList::SetFriendshipValue(int index,int data)
 {
 	return FriendshipValue[index] = data;
+}
+
+void BookList::SetBookCnt(int count)
+{
+	BookCnt += count;
+}
+
+void BookList::SetLibraryScore(void)
+{
+	auto tmp_cnt = 0;
+	for (int  n = 0 ; n < BookLibrary.size();n++)
+	{
+		if (BookLibrary[n] == true)
+		{
+			tmp_cnt++;
+			LibraryScore = (BookStatus[BookArchive[n]].Evaluation);
+		}
+	}
+	LibraryScore = (BookCnt - tmp_cnt)*10;
 }
 
 void BookList::SetLooting(string title,bool flag)
@@ -115,7 +149,7 @@ void BookList::SetLooting(string title,bool flag)
 void BookList::ChangeStatus(string author)
 {
 	auto itr = BookAuthorList.begin();
-	if (author != "unkown")
+	if (author != "•s–¾")
 	{
 		while (1)
 		{

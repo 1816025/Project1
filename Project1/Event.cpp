@@ -42,8 +42,9 @@ void Event::UpDate(const KeyCtl &controller)
 				//Œ»İŠ—L‚µ‚Ä‚¢‚È‚¯‚ê‚ÎŠl“¾‚Å‚«‚é
 				if (lpBookList.GetLibrary()[lpBookList.GetLibraryIndex(Candidate[num])] == false)
 				{
-					lpBookList.SetLibrary(lpBookList.GetLibraryIndex(Candidate[num]),true);
+					lpBookList.SetLibrary(lpBookList.GetLibraryIndex(Candidate[num]), true);
 				}
+				lpBookList.SetBookCnt(10);
 			}
 		}
 		break;
@@ -64,7 +65,7 @@ void Event::UpDate(const KeyCtl &controller)
 
 void Event::Draw(void)
 {
-	if (GetEvent().id == EVENT::Debut)
+	if (GetEvent().id == EVENT::Donation)
 	{
 		for (int num = 0; num < Candidate.size(); num++)
 		{

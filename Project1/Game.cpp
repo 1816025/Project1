@@ -70,7 +70,6 @@ int Game::Init()
 	TimeTransFlag = true; //trueÇ≈Frameâ¡éZ
 	SetObjectFlag = false;
 	CntSpeed = 1;
-	BookCnt = 100;
 	Pose = false;
 	WorldRank = 0;
 	srand(time(NULL));
@@ -88,7 +87,7 @@ int Game::Init()
 	lpSoundMng.PlaySound("sounddata/Library.mp3", PlayType::Loop);
 	fontHandle["font01"] = CreateFontToHandle("font01", 24, 9, DX_FONTTYPE_EDGE,-1,2);
 	fontHandle["font02"] = CreateFontToHandle("font02", 35, 9, DX_FONTTYPE_EDGE,-1,2,2);
-	lpBookList.GetInstance();
+	lpBookList.SetLibraryScore();
 	return 0;
 }
 
@@ -128,8 +127,9 @@ void Game::Timer(const KeyCtl &controller)
 				date.hour = 0;
 				for (int index = 0; index < lpAchievement.GetAchievement().size(); index++)
 				{
-					lpAchievement.UpDate(lpAchievement.GetAchievement()[index], { false,date,WorldRank,BookCnt,CollectCnt });
+					lpAchievement.UpDate(lpAchievement.GetAchievement()[index], { false,date,lpBookList.GetLibraryScore(),lpBookList.GetBookCnt(),CollectCnt });
 				}
+				lpBookList.SetLibraryScore();
 			}
 			if (date.day > 24)
 			{
@@ -202,18 +202,24 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	}
 	if (Key[KEY_INPUT_ESCAPE] & ~KeyOld[KEY_INPUT_ESCAPE])
 	{
-		lpSceneMng.SetEndFlag(true);
-		lpBookList.DataSave("BookArchive");
 		lpMapCtl.MapSave(false, WorldName);
-	}if (Key[KEY_INPUT_A] & ~KeyOld[KEY_INPUT_A])
+		lpBookList.DataSave("BookArchive");
+		lpSoundMng.StopSound("sounddata/Library.mp3");
+		lpSceneMng.SetEndFlag(true);
+	}
+	if (Key[KEY_INPUT_A] & ~KeyOld[KEY_INPUT_A])
 	{
-		lpBookList.DataLoad("BookArchive");
-		lpMapCtl.MapLoad("New World.map");
+		lpBookList.SetLibraryScore();
 	}
 	if (Key[KEY_INPUT_D] & ~KeyOld[KEY_INPUT_D])
 	{
 		date.daycycle = DayCycle::Night;
 		lpEvent.PlayEvent(EVENT::Raid);
+	}
+
+	if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
+	{
+		lpEvent.PlayEvent(EVENT::Donation);
 	}
 
 	if (OpenFlag == true)
@@ -265,6 +271,17 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 		lpEvent.UpDate(controller);
 	}
 	Phase(date.daycycle);
+	if (date.minute%60 == 0)
+	{
+		if (WorldName.find(".png") == string::npos)
+		{
+			SaveDrawScreenToPNG(OffSetX, OffSetY, 300 + 400, 100 + 400, ("img/worldimg/" + WorldName + ".png").c_str());
+		}
+		else
+		{
+			SaveDrawScreenToPNG(OffSetX, OffSetY, OffSetX - 16 + 432, OffSetX - 16 + 448, ("img/" + WorldName.erase(WorldName.find(".png")) + ".png").c_str());
+		}
+	}
 	Draw();
 	return move(own);
 }
@@ -300,32 +317,33 @@ void Game::Draw()
 		DrawGraph(0, 0, lpImageMng.GetID("img/books.png")[0], false);
 		DrawBox(ScreenSize.x / 2 - 50, 75, ScreenSize.x - 100, ScreenSize.y -100, 0x00, true);
 		DrawBox(100, ScreenSize.y -300,300, ScreenSize.y - 100, 0x00, true);
-		DrawFormatString(125, 320, 0xffffff, "BookCnt: %dç˚", BookCnt);
+		DrawFormatString(125, 320, 0xffffff, "BookCnt: %dç˚", lpBookList.GetBookCnt());
 		DrawFormatString(125, 360, 0xffffff, "LibraryRank: ");
 		DrawFormatStringToHandle(490, 30, 0x00ffff, fontHandle["font02"], "é¿ê—");
 
-		switch (WorldRank)
+		if (lpBookList.GetLibraryScore() < 10000)
 		{
-		case 0:
 			DrawFormatStringToHandle(260, 350, 0xffffff, fontHandle["font01"], "D");
-			break;
-		case 1:
-			DrawFormatStringToHandle(260, 350, 0xfffff8, fontHandle["font01"], "LibraryRank: C");
-			break;
-		case 2:
-			DrawFormatStringToHandle(260, 350, 0xfffff0, fontHandle["font01"], "LibraryRank: B");
-			break;
-		case 3:
-			DrawFormatStringToHandle(260, 350, 0xffff8f, fontHandle["font01"], "LibraryRank: A");
-			break;
-		case 4:
-			DrawFormatStringToHandle(260, 350, 0xffff80, fontHandle["font01"], "LibraryRank: S");
-			break;
-		case 5:
-			DrawFormatStringToHandle(260, 350, 0xffff00, fontHandle["font01"], "LibraryRank: SS");
-			break;
-		default:
-			break;
+		}
+		else if (lpBookList.GetLibraryScore() < 50000)
+		{
+			DrawFormatStringToHandle(260, 350, 0xfffff8, fontHandle["font01"], "C");
+		}
+		else if (lpBookList.GetLibraryScore() < 500000)
+		{
+			DrawFormatStringToHandle(260, 350, 0xfffff0, fontHandle["font01"], "B");
+		}
+		else if (lpBookList.GetLibraryScore() < 1000000)
+		{
+			DrawFormatStringToHandle(260, 350, 0xffff8f, fontHandle["font01"], "A");
+		}
+		else if (lpBookList.GetLibraryScore() < 5000000)
+		{
+			DrawFormatStringToHandle(260, 350, 0xffff80, fontHandle["font01"], "S");
+		}
+		else if (lpBookList.GetLibraryScore() < 10000000)
+		{
+			DrawFormatStringToHandle(260, 350, 0xffff00, fontHandle["font01"], "SS");
 		}
 		for (int num = 0;num< lpAchievement.GetAchievement().size(); num++)
 		{
