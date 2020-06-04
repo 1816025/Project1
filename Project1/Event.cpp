@@ -56,7 +56,10 @@ void Event::UpDate(const KeyCtl &controller)
 		lpRaid.UpDate();
 	case EVENT::Favorability:
 		SetEvent(false, EVENT::Favorability);
-		lpFavorability.UpDate(rand()%lpBookList.GetFavorabilityList(true).size(),controller);
+		if (!(lpBookList.GetFavorabilityList(true).empty()))
+		{
+			lpFavorability.UpDate(rand() % lpBookList.GetFavorabilityList(true).size(), controller);
+		}
 		break;
 	default:
 		break;

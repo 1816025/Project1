@@ -4,6 +4,7 @@
 #include "SceneMng.h"
 #include "WorldSelect.h"
 #include "Game.h"
+#include "VECTOR2.h"
 #include "TitleScene.h"
 
 TitleScene::TitleScene()
@@ -44,12 +45,16 @@ void TitleScene::Init()
 {
 	start.NewWorld = { (ScreenSize.x / 2) - (400 / 2),(ScreenSize.y)-240 };
 	start.Continue = { (ScreenSize.x / 2) - (400 / 2),(ScreenSize.y) - 120 };
+	GetGraphSize(lpImageMng.GetID("img/titleimg.png")[0], &titleSize.x, &titleSize.y);
 }
 
 void TitleScene::TitleDraw(void)
 {
 	ClsDrawScreen();
+	
 	DrawGraph(0, 0,lpImageMng.GetID("img/books.png")[0],false);
+	DrawGraph((ScreenSize.x / 2) - titleSize.x/2, (ScreenSize.y / 2) - titleSize.y/1.22,lpImageMng.GetID("img/titleimg.png")[0],true);
+	DrawGraph((ScreenSize.x / 2) - titleSize.x / 2 + 50, 70,lpImageMng.GetID("img/TitleLogo.png")[0],true);
 	DrawGraph(start.NewWorld.x,start.NewWorld.y,lpImageMng.GetID("img/New start.png", VECTOR2(400, 80), VECTOR2(1, 2))[1],false);
 	DrawGraph(start.Continue.x, start.Continue.y,lpImageMng.GetID("img/ReStart.png", VECTOR2(400, 80), VECTOR2(1, 2))[1],false);
 	ScreenFlip();

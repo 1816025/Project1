@@ -14,7 +14,7 @@ Achievement::Achievement()
 		"本取集10回"
 	};
 	AchievementData["本日開館"]   = {false,{DayCycle::Day,0,1,1,0,0},0,0, 0};
-	AchievementData["本日休館日"] = {false,{DayCycle::Day,0,1,1,0,0},0,0, 0};
+	AchievementData["本日休館日"] = {false,{DayCycle::Day,0,4,1,0,0},0,0, 0};
 	AchievementData["開館一周年"] = {false,{DayCycle::Day,2,1,1,0,0},0,0, 0};
 	AchievementData["開館五周年"] = {false,{DayCycle::Day,6,1,1,0,0},0,0, 0};
 	AchievementData["本取集５回"] = {false,{DayCycle::Day,0,1,1,0,0},0,0, 5};

@@ -19,6 +19,6 @@ private:
 	void Init();
 	void TitleDraw(void);
 	SelectMode start;
-
+	VECTOR2 titleSize;
 };
 

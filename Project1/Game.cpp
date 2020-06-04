@@ -105,17 +105,16 @@ void Game::Timer(const KeyCtl &controller)
 	Frame++;
 
 	date.daycycle = static_cast<DayCycle>(date.hour / 24 % static_cast<int>(DayCycle::Max));
-	//OpenFlag = (date.day % 4 != 0 ? true : false);
-	if (Frame%(60) == 0)
+	if (Frame%(20) == 0)
 	{
 		date.minute += 1;
-		if (date.minute % (60) == 0)
+		if (date.minute % (20) == 0)
 		{
 			date.hour += 1;
 			date.minute = 0;
 			if (date.hour >= 12)
 			{
-			date.daycycle = DayCycle::Night;
+				date.daycycle = DayCycle::Night;
 			}
 			else
 			{
@@ -129,6 +128,7 @@ void Game::Timer(const KeyCtl &controller)
 				{
 					lpAchievement.UpDate(lpAchievement.GetAchievement()[index], { false,date,lpBookList.GetLibraryScore(),lpBookList.GetBookCnt(),CollectCnt });
 				}
+				OpenFlag = (date.day % 4 != 0 ? true : false);
 				lpBookList.SetLibraryScore();
 			}
 			if (date.day > 24)
@@ -270,7 +270,10 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	{
 		lpEvent.UpDate(controller);
 	}
-	Phase(date.daycycle);
+	if (lpEvent.CheckEvent() == false && date.hour % 12 == 8 && date.minute == 0)
+	{
+		Phase(date.daycycle);
+	}
 	if (date.minute%60 == 0)
 	{
 		if (WorldName.find(".png") == string::npos)
@@ -294,7 +297,7 @@ void Game::Draw()
 	ClearDrawScreen();
 	DrawGraph(0, 0, lpImageMng.GetID("img/books.png")[0], false);
 
-	if (lpEvent.CheckEvent() == true)
+	if (lpEvent.CheckEvent() == true && lpEvent.GetEvent().id == EVENT::Donation)
 	{
 		lpEvent.Draw();
 	}
@@ -368,18 +371,19 @@ void Game::Phase(DayCycle cycle)
 		if (OpenFlag == true)
 		{
 			SetObjectFlag = false;
-			if(rand()%30==0)
-			{
-				CollectCnt++;
-				lpEvent.PlayEvent(EVENT::Donation);
-			}if(rand()%10==0)
-			{
-				lpEvent.PlayEvent(EVENT::Debut);
-			}
 		}
 		else
 		{
 			SetObjectFlag = true;
+		}
+		if (rand() % 60 == 0)
+		{
+			CollectCnt++;
+			lpEvent.PlayEvent(EVENT::Donation);
+		}
+		if (rand() % 90 == 0)
+		{
+			lpEvent.PlayEvent(EVENT::Debut);
 		}
 		break;
 	case DayCycle::Night:
