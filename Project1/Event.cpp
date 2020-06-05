@@ -75,7 +75,7 @@ void Event::Draw(void)
 			DrawGraph(OffSetX / 1.5 + (OffSetX / 1.5)*num, ScreenSize.y / 2 + OffSetY / 2, lpImageMng.GetID("img/bookicon.png")[0], true);
 			DrawFormatString(OffSetX / 2 + (OffSetX / 1.5)*num, ScreenSize.y / 2 - OffSetY / 1.5, 0xffffff, "%s", Candidate[num].c_str());
 		}
-		DrawFormatString(0, 0, 0xffffff, "%d\n%d\n%d", Candidate[0], Candidate[1], Candidate[2]);
+		//DrawFormatString(0, 0, 0xffffff, "%d\n%d\n%d", Candidate[0], Candidate[1], Candidate[2]);
 	}
 	if (GetEvent().id == EVENT::Favorability)
 	{

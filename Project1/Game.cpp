@@ -155,7 +155,7 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 
 	auto Mpos = VECTOR2(0, 0);
 	GetMousePoint(&Mpos.x, &Mpos.y);
-	if (TimeTransFlag)
+	if (lpEvent.GetEvent().flag == false)
 	{
 		Timer(controller);
 	}
@@ -189,6 +189,7 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 			}
 		}
 	}
+
 	if (Click&(~ClickOld) && Mpos > VECTOR2(10, 450) && Mpos < VECTOR2(10 + ImageSize["Bookicon"].x, 450 + ImageSize["Bookicon"].y))
 	{
 		if (Pose == false)
@@ -200,6 +201,7 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 			Pose = false;
 		}
 	}
+
 	if (Key[KEY_INPUT_ESCAPE] & ~KeyOld[KEY_INPUT_ESCAPE])
 	{
 		lpMapCtl.MapSave(false, WorldName);
@@ -207,10 +209,12 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 		lpSoundMng.StopSound("sounddata/Library.mp3");
 		lpSceneMng.SetEndFlag(true);
 	}
+/*
 	if (Key[KEY_INPUT_A] & ~KeyOld[KEY_INPUT_A])
 	{
 		lpBookList.SetLibraryScore();
 	}
+
 	if (Key[KEY_INPUT_D] & ~KeyOld[KEY_INPUT_D])
 	{
 		date.daycycle = DayCycle::Night;
@@ -221,47 +225,58 @@ unique_base Game::UpDate(unique_base own,const KeyCtl &controller)
 	{
 		lpEvent.PlayEvent(EVENT::Donation);
 	}
+*/
+	//if (OpenFlag == true)
+	//{
+	//	///*開館時のイベント(昼)*/
+	//	//if (date.daycycle == DayCycle::Day)
+	//	//{
+	//	//	if (lpEvent.CheckEvent())
+	//	//	{
+	//	//		TimeTransFlag = false;
+	//	//	}
 
-	if (OpenFlag == true)
+	//	//	if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
+	//	//	{
+	//	//		lpEvent.PlayEvent(EVENT::Donation);
+	//	//	}
+
+	//	//	if (Key[KEY_INPUT_W] & ~KeyOld[KEY_INPUT_W])
+	//	//	{
+	//	//		lpEvent.PlayEvent(EVENT::Debut);
+	//	//	}
+
+	//	//	if (lpEvent.GetEvent().id == EVENT::Raid && lpEvent.GetEvent().flag == true)
+	//	//	{
+	//	//		lpEvent.SetEvent(false, EVENT::Raid);
+	//	//	}
+	//	//} 
+	//	//else
+	//	//{
+	//	//	lpEvent.PlayEvent(EVENT::Raid);
+	//	//}
+	//}
+	//else
+	//{
+	//	if (date.daycycle == DayCycle::Day)
+	//	{
+	//		if (Click&(~ClickOld) )
+	//		{
+	//			if (lpMapCtl.GetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY)) == Map_ID::NON || id == Map_ID::NON)
+	//			{
+	//				lpMapCtl.SetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY), id);
+	//			}
+	//		}
+	//	}
+	//}
+
+	if (SetObjectFlag)
 	{
-		/*開館時のイベント(昼)*/
-		if (date.daycycle == DayCycle::Day)
+		if (Click&(~ClickOld))
 		{
-			if (lpEvent.CheckEvent())
+			if (lpMapCtl.GetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY)) == Map_ID::NON || id == Map_ID::NON)
 			{
-				TimeTransFlag = false;
-			}
-
-			if (Key[KEY_INPUT_S] & ~KeyOld[KEY_INPUT_S])
-			{
-				lpEvent.PlayEvent(EVENT::Donation);
-			}
-
-			if (Key[KEY_INPUT_W] & ~KeyOld[KEY_INPUT_W])
-			{
-				lpEvent.PlayEvent(EVENT::Debut);
-			}
-
-			if (lpEvent.GetEvent().id == EVENT::Raid && lpEvent.GetEvent().flag == true)
-			{
-				lpEvent.SetEvent(false, EVENT::Raid);
-			}
-		} 
-		else
-		{
-			lpEvent.PlayEvent(EVENT::Raid);
-		}
-	}
-	else
-	{
-		if (date.daycycle == DayCycle::Day)
-		{
-			if (Click&(~ClickOld) )
-			{
-				if (lpMapCtl.GetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY)) == Map_ID::NON || id == Map_ID::NON)
-				{
-					lpMapCtl.SetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY), id);
-				}
+				lpMapCtl.SetMapData(Mpos + VECTOR2(-OffSetX, -OffSetY), id);
 			}
 		}
 	}

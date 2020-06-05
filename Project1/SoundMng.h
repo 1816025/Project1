@@ -13,7 +13,7 @@
 #endif    // _DEBUG
 
 #define lpSoundMng SoundMng::GetInstance()
-#define IMAGE_ID(X) (SoundMng::GetInstance().GetID(X))
+//#define IMAGE_ID(X) (SoundMng::GetInstance().GetID(X))
 
 using namespace std;
 using VEC_INT = vector<int>;

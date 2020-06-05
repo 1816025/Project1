@@ -18,7 +18,22 @@ const VEC_INT & SoundMng::GetID(std::string f_name)
 
 const int & SoundMng::PlaySound(string f_name, PlayType type)
 {
-	return PlaySoundMem(SoundData[f_name][0], DX_PLAYTYPE_LOOP);
+	switch (type)
+	{
+	case PlayType::Normal:
+		return PlaySoundMem(SoundData[f_name][0], DX_PLAYTYPE_NORMAL);
+		break;
+	case PlayType::Back:
+		return PlaySoundMem(SoundData[f_name][0], DX_PLAYTYPE_BACK);
+		break;
+	case PlayType::Loop:
+		return PlaySoundMem(SoundData[f_name][0], DX_PLAYTYPE_LOOP);
+		break;
+	case PlayType::Max:
+		break;
+	default:
+		break;
+	}
 }
 
 const int & SoundMng::StopSound(string f_name)

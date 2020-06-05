@@ -1,5 +1,6 @@
 #include "DxLib.h"
 #include "ImageMng.h"
+#include "SoundMng.h"
 #include "KeyCtl.h"
 #include "SceneMng.h"
 #include "WorldSelect.h"
@@ -26,11 +27,13 @@ unique_base TitleScene::UpDate(unique_base own, const KeyCtl & controller)
 	GetMousePoint(&Mpos.x, &Mpos.y);
 	if ((Click&(~ClickOld)) && (Mpos > start.NewWorld&&Mpos < start.NewWorld + VECTOR2{ 400,80 }))
 	{
+		lpSoundMng.PlaySound("sounddata/PaperTake.mp3", PlayType::Normal);
 		return std::make_unique<Game>();
 	}
 
 	if ((Click&(~ClickOld)) && (Mpos > start.Continue&&Mpos < start.Continue + VECTOR2{ 400,80 }))
 	{
+		lpSoundMng.PlaySound("sounddata/PaperTake.mp3", PlayType::Normal);
 		return std::make_unique<WorldSelect>();
 	}
 	if (Key[KEY_INPUT_ESCAPE] & ~KeyOld[KEY_INPUT_ESCAPE])
@@ -46,6 +49,7 @@ void TitleScene::Init()
 	start.NewWorld = { (ScreenSize.x / 2) - (400 / 2),(ScreenSize.y)-240 };
 	start.Continue = { (ScreenSize.x / 2) - (400 / 2),(ScreenSize.y) - 120 };
 	GetGraphSize(lpImageMng.GetID("img/titleimg.png")[0], &titleSize.x, &titleSize.y);
+	lpSoundMng.GetID("sounddata/PaperTake.mp3");
 }
 
 void TitleScene::TitleDraw(void)

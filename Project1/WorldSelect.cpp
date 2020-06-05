@@ -1,5 +1,6 @@
 #include "DxLib.h"
 #include "ImageMng.h"
+#include "SoundMng.h"
 #include "BaseScene.h"
 #include "KeyCtl.h"
 #include "Game.h"
@@ -8,6 +9,7 @@
 WorldSelect::WorldSelect()
 {
 	drawOffset = { 0,0 };
+	lpSoundMng.GetID("sounddata/PaperTake.mp3");
 }
 
 WorldSelect::~WorldSelect()
@@ -26,6 +28,7 @@ unique_base WorldSelect::UpDate(unique_base own, const KeyCtl & controller)
 	{
 		if (Click&(ClickOld) && (Mpos ) > VECTOR2(10 , ScreenSize.y / 2 + 140 * cnt+ drawOffset.y) && (Mpos ) < VECTOR2(150 , ScreenSize.y / 2 + 120+ 140 * cnt + drawOffset.y))
 		{
+			//lpSoundMng.PlaySound("sounddata/PaperTake.mp3", PlayType::Normal);
 			return std::make_unique<Game>(WorldData[cnt]);
 		}
 	}
@@ -52,7 +55,7 @@ void WorldSelect::Draw()
 		DrawFormatString(0 ,0, 0xffffff, "%d", drawOffset.y);
 		DrawFormatString(0 ,20, 0xffffff, "%d", Mpos.y);
 		DrawFormatString(140 , ScreenSize.y / 2 + drawOffset.y+ 140 * cnt, 0xffffff, "%s", WorldData[cnt].c_str());
-		DrawRotaGraph2(10, ScreenSize.y/2 + drawOffset.y+140 * cnt, 0, 0, 0.2, 0, IMAGE_ID("img/worldimg/" + WorldData[cnt])[0], false, false);
+		DrawRotaGraph2(10, ScreenSize.y/2 + drawOffset.y+140 * cnt, 0, 0, 0.3, 0, IMAGE_ID("img/worldimg/" + WorldData[cnt])[0], false, false);
 		DrawBox(10 , ScreenSize.y / 2 + drawOffset.y+ 140 * cnt, 130 , ScreenSize.y / 2 +120+ drawOffset.y + 140 * cnt, 0xff00, false);
 	}
 	ScreenFlip();
